@@ -1,59 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nursing Prometric Test - Landing</title>
-<style>
-/* ... keep your previous CSS for layout ... */
-body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; background:#eef5f5;}
-.top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; }
-.bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
-.water-flow { position:absolute; top:0; left:0; width:200%; height:200%; background:url('assets/icon17%20(1).jpg') repeat; opacity:0.2; background-size:cover; animation:flow 15s linear infinite; pointer-events:none;}
-@keyframes flow { 0%{ transform:translate(-50%,-50%) rotate(0deg);}100%{ transform:translate(-50%,-50%) rotate(360deg);}}
-.qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; opacity:1; }
-.user-info { margin-top:10px; display:flex; flex-wrap:wrap; gap:10px;}
-.user-info input { padding:5px 10px; border-radius:5px; border:1px solid #ccc; font-size:0.9rem; width:calc(50% - 10px);}
-.social-icons { margin-top:15px; display:flex; gap:15px;}
-.social-icons a img { width:40px; height:40px; cursor:pointer; transition:transform 0.3s;}
-.social-icons a img:hover { transform:scale(1.2);}
-.buttons { margin-top:15px;}
-button { padding:10px 20px; margin-right:10px; border:none; border-radius:8px; cursor:pointer; font-size:1rem;}
-#continue-btn { background-color:#28a745; color:#fff;}
-#continue-btn:hover { background-color:#218838;}
-#confirm-btn { background-color:#007bff; color:#fff;}
-#confirm-btn:hover { background-color:#0056b3;}
-input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5px; border:1px solid #ccc;}
-</style>
-</head>
-<body>
-
-<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg"></div>
-
-<div class="bottom-half">
-  <div class="water-flow"></div>
-  <h2>Check the QR Dana to put IDR 50k</h2>
-  <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
-
-  <div class="user-info">
-    <input type="text" id="userNameInput" placeholder="Enter your name">
-    <input type="text" id="userWAInput" placeholder="Enter your WA #">
-  </div>
-
-  <div class="social-icons">
-    <a href="tel:+6285399652487"><img src="https://cdn-icons-png.flaticon.com/512/597/597177.png"></a>
-    <a href="https://wa.me/6285399652487" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
-    <a href="mailto:gyoutrain@gmail.com"><img src="https://cdn-icons-png.flaticon.com/512/732/732200.png"></a>
-    <a href="https://web.facebook.com/gyouskill/?_rdc=1&_rdr#" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></a>
-    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png"></a>
-  </div>
-
-  <div class="buttons">
-    <button id="confirm-btn" onclick="confirmPayment()">Confirmation</button>
-    <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code" disabled>
-    <button id="continue-btn" onclick="checkUnlockCode()" disabled>Continue the Test</button>
-  </div>
-</div>
+<input type="text" id="userNameInput" placeholder="Enter your name">
+<input type="text" id="userWAInput" placeholder="Enter your WA #">
+<button id="confirm-btn" onclick="confirmPayment()">Confirmation</button>
+<input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code" disabled>
+<button id="continue-btn" onclick="checkUnlockCode()" disabled>Continue the Test</button>
 
 <script>
 let unlockCode = "";
@@ -70,7 +19,7 @@ function confirmPayment() {
   document.getElementById("unlockCodeInput").disabled = true;
   document.getElementById("continue-btn").disabled = true;
 
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbyq0pg5kh8XMcSKXbg0XgK3uN5e517zKJQ4TANeiieWGHruj83D0cGyw4nOrbo1GD9fwQ/exec"; // <-- Replace with your Web App URL
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbwybh4YFgmHrCvj_ByZsWetFwZxg586XNlXV3rL_-S2exlqIxPEvStb_6pxgI23MbAGYg/exec"; // <-- replace
 
   fetch(GAS_URL, {
     method: "POST",
@@ -83,7 +32,9 @@ function confirmPayment() {
       paymentApproved = true;
       document.getElementById("unlockCodeInput").disabled = false;
       document.getElementById("continue-btn").disabled = false;
-      alert(`Payment confirmed! Your unlock code is: ${unlockCode}`);
+      alert("Payment confirmed! Enter unlock code to continue.");
+    } else if (data.status === "error") {
+      alert("Error: " + data.message);
     }
   })
   .catch(err => console.log("Error:", err));
@@ -101,5 +52,3 @@ function checkUnlockCode() {
   }
 }
 </script>
-</body>
-</html>
