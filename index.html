@@ -5,36 +5,46 @@
 // Generate unique session ID for each user
 let sessionID = "SID-" + Math.random().toString(36).substring(2, 10).toUpperCase();
 
-// Store session ID so refresh cannot reset it
+// Prevent session reset on refresh
 if (!localStorage.getItem("unlock_sessionID")) {
   localStorage.setItem("unlock_sessionID", sessionID);
 } else {
   sessionID = localStorage.getItem("unlock_sessionID");
 }
 
-// Track unlock state
+// Unlock state + attempt limit
 let unlockAllowed = false;
 let attempts = 0;
 const MAX_ATTEMPTS = 3;
 
-// Admin creates unlock codes (manual, private)
-const VALID_CODES = ["GY500A", "GY500B", "GY500C"]; // You can change anytime
+// Admin-controlled unlock codes (manual)
+const VALID_CODES = ["GY500A", "GY500B", "GY500C"]; // Editable anytime
 
+// ---------------------------------------------------
+// CONFIRM PAYMENT PROCESS
+// ---------------------------------------------------
 function confirmPayment() {
   const userName = document.getElementById("userNameInput").value.trim();
   const userWA = document.getElementById("userWAInput").value.trim();
 
+  // Field check
   if (!userName || !userWA) {
     alert("Please fill in your Name and WA # before confirming payment.");
     return;
   }
 
-  // Step 1: Inform user
+  // WA validation (basic)
+  if (!/^\+?\d{10,15}$/.test(userWA.replace(/[^0-9+]/g, ""))) {
+    alert("Invalid WA number format.");
+    return;
+  }
+
+  // Inform user
   alert(
     "Admin will provide your unlock code.\nPlease send your payment proof first."
   );
 
-  // Step 2: Ask user to send proof
+  // Ask user to continue
   const action = confirm("Press OK to send payment proof.\nPress CANCEL to stop.");
 
   if (!action) {
@@ -42,7 +52,7 @@ function confirmPayment() {
     return;
   }
 
-  // User chooses OK → Send details to admin
+  // Message sent to admin
   const adminMsg =
     `NEW PAYMENT REQUEST\n\n` +
     `Name: ${userName}\n` +
@@ -52,17 +62,24 @@ function confirmPayment() {
     `Send unlock code manually.\n` +
     `Press 1 to approve, 2 to deny.`;
 
-  // WhatsApp notification
+  // Notify admin via WhatsApp
   window.open(
     `https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,
     "_blank"
   );
 
   alert("Admin notified. Please wait for admin to give your unlock code.");
+
   unlockAllowed = true;
-  document.getElementById("continue-btn").disabled = false;
+
+  // Enable continue button if exists
+  const btn = document.getElementById("continue-btn");
+  if (btn) btn.disabled = false;
 }
 
+// ---------------------------------------------------
+// CHECK UNLOCK CODE
+// ---------------------------------------------------
 function checkUnlockCode() {
   if (!unlockAllowed) {
     alert("You must send the payment proof first.");
@@ -79,17 +96,21 @@ function checkUnlockCode() {
     return;
   }
 
-  // Max attempts control
+  // Attempt limit check
   attempts++;
   if (attempts > MAX_ATTEMPTS) {
     alert("Too many wrong attempts. Access blocked.");
     return;
   }
 
-  // Validate against admin's codes
+  // Validate unlock code
   if (VALID_CODES.includes(code)) {
     alert("Unlock successful! Redirecting...");
-    localStorage.removeItem("unlock_sessionID"); // Clear session
+
+    // Cleanup
+    localStorage.removeItem("unlock_sessionID");
+
+    // Redirect to full test
     window.location.href =
       "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
   } else {
