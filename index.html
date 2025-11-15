@@ -30,7 +30,7 @@ body, html {
   padding: 20px;
   box-sizing: border-box;
   overflow: hidden;
-  background: #eef5f5; /* neutral to show flowing image */
+  background: #eef5f5;
 }
 
 /* Flowing image as water effect */
@@ -40,7 +40,7 @@ body, html {
   width: 200%;
   height: 200%;
   background: url('assets/icon17%20(1).jpg') repeat;
-  opacity: 0.2; /* transparent effect */
+  opacity: 0.2;
   background-size: cover;
   animation: flow 15s linear infinite;
   pointer-events: none;
@@ -69,21 +69,23 @@ body, html {
   transition: opacity 1s ease;
 }
 
-.contacts {
-  margin-top: 10px;
+/* Social icons */
+.social-icons {
+  margin-top: 15px;
+  display: flex;
+  gap: 15px;
   z-index: 2;
   position: relative;
 }
 
-.contacts a img {
-  width: 35px;
-  margin-right: 10px;
-  vertical-align: middle;
+.social-icons a img {
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: transform 0.3s;
 }
 
-.contacts a img:hover {
+.social-icons a img:hover {
   transform: scale(1.2);
 }
 
@@ -134,7 +136,7 @@ input.unlock-code {
   .qr-container { width: 20%; }
   input.unlock-code { width: 100px; }
   .bottom-half h2 { font-size: 1.2rem; }
-  .contacts a img { width: 30px; margin-right: 8px; }
+  .social-icons a img { width: 30px; height: 30px; }
 }
 </style>
 </head>
@@ -147,18 +149,22 @@ input.unlock-code {
   <h2>Check the QR Dana to put IDR 50k</h2>
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
-  <div class="contacts">
+  <!-- Social icons -->
+  <div class="social-icons">
+    <a href="tel:+6285399652487" title="Call">
+      <img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Call">
+    </a>
     <a href="https://wa.me/6285399652487" target="_blank" title="WhatsApp">
-      <img src="assets/whatsapp.svg" alt="WA Icon">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp">
     </a>
     <a href="mailto:gyoutrain@gmail.com" target="_blank" title="Email">
-      <img src="assets/email.svg" alt="Email Icon">
+      <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Email">
+    </a>
+    <a href="https://web.facebook.com/gyouskill/?_rdc=1&_rdr#" target="_blank" title="Facebook">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
     </a>
     <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank" title="Instagram">
-      <img src="assets/instagram.svg" alt="Instagram Icon">
-    </a>
-    <a href="https://t.me/etkyogyakarta" target="_blank" title="Telegram">
-      <img src="assets/telegram.svg" alt="Telegram Icon">
+      <img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram">
     </a>
   </div>
 
@@ -167,6 +173,8 @@ input.unlock-code {
     <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code">
     <button id="continue-btn" onclick="checkUnlockCode()">Continue the Test</button>
   </div>
+
+  <div class="dashboard-background"></div>
 </div>
 
 <script>
