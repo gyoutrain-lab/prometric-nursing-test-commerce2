@@ -205,28 +205,53 @@ window.addEventListener('load',()=>{
 });
 
 // ------------------------
-// Admin-controlled unlock code workflow
+// Admin-controlled unlock code workflow (SECURE VERSION)
 // ------------------------
-let generatedCode = ""; // Will store the unlock code for this session
+
+// Admin sets the unlock codes manually
+const ADMIN_UNLOCK_CODES = ["AB1234", "XY7788", "MK2025"]; 
 
 function confirmPayment() {
   const userName = document.getElementById("userNameInput").value.trim();
   const userWA = document.getElementById("userWAInput").value.trim();
-  if(!userName || !userWA){
+
+  if (!userName || !userWA) {
     alert("Please fill in your Name and WA # before confirming payment.");
     return;
   }
 
-  // Generate random unlock code
-  generatedCode = Math.random().toString(36).substring(2,8).toUpperCase();
-  document.getElementById("unlockCodeInput").value = generatedCode;
+  // Tell the admin a new request came in (no auto code)
+  const adminMsg = 
+    `Payment Confirmed:\n` +
+    `Name: ${userName}\n` +
+    `WA #: ${userWA}\n` +
+    `User requesting unlock.\n` +
+    `Send unlock code manually.`;
+
+  window.open(
+    `https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,
+    "_blank"
+  );
+
+  alert("Admin notified. Wait for admin to send the unlock code.");
   document.getElementById("continue-btn").disabled = false;
+}
 
-  // Notify admin via WhatsApp
-  const adminMsg = `Payment Confirmed:\nName: ${userName}\nWA #: ${userWA}\nUnlock Code: ${generatedCode}\nPress 1 to send code, 2 to mark Unlock in Progress.`;
-  window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`, "_blank");
+// Continue button validation (secure)
+function checkUnlockCode() {
+  const codeInput = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
 
-  alert("Admin notified. Wait for unlock code approval.");
+  if (!codeInput) {
+    alert("Enter the unlock code first.");
+    return;
+  }
+
+  if (ADMIN_UNLOCK_CODES.includes(codeInput)) {
+    alert("Unlock code valid! Redirecting to the test...");
+    window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
+  } else {
+    alert("Invalid unlock code. Please check with admin.");
+  }
 }
 
 // Continue button validation
