@@ -1,202 +1,173 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nursing Prometric Test - Landing</title>
-<style>
-body, html {
-  margin: 0; padding: 0;
-  font-family: Arial, sans-serif;
-  height: 100%;
-  overflow-x: hidden;
-  background: #eef5f5;
+// -----------------------------------------------------
+// SECURITY LEVEL 2 — ADVANCED FRONTEND PROTECTION
+// -----------------------------------------------------
+
+// ----------- ENCRYPTED SESSION TOKEN -----------
+function encryptSession(str) {
+  return btoa(unescape(encodeURIComponent(str)));
 }
 
-.top-half {
-  width: 100%;
-  height: 50vh;
-  background: url('assets/icon17%20(1).jpg') center/cover no-repeat;
+let sessionID = "SID-" + Math.random().toString(36).substring(2, 12).toUpperCase();
+let encryptedSession = encryptSession(sessionID);
+
+// Prevent refresh bypass
+if (!localStorage.getItem("secure_session")) {
+  localStorage.setItem("secure_session", encryptedSession);
+} else {
+  encryptedSession = localStorage.getItem("secure_session");
 }
 
-.bottom-half {
-  width: 100%;
-  height: 50vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow: hidden;
-  background: #eef5f5; /* neutral to show flowing image */
+// ----------- UNLOCK SYSTEM CONTROL -----------
+let unlockAllowed = false;
+let attempts = 0;
+const MAX_ATTEMPTS = 3;
+
+// Admin-managed One-Time Codes
+let VALID_CODES = {
+  "GY500A": null,
+  "GY500B": null,
+  "GY500C": null
+};
+
+// Code expires in 10 minutes
+const EXPIRATION_MS = 10 * 60 * 1000;
+
+function setCodeTimer(code) {
+  VALID_CODES[code] = Date.now() + EXPIRATION_MS;
 }
 
-/* Flowing image as water effect */
-.water-flow {
-  position: absolute;
-  top: 0; left: 0;
-  width: 200%;
-  height: 200%;
-  background: url('assets/icon17%20(1).jpg') repeat;
-  opacity: 0.2; /* transparent effect */
-  background-size: cover;
-  animation: flow 15s linear infinite;
-  pointer-events: none;
+function isCodeExpired(code) {
+  if (!VALID_CODES[code]) return true;
+  return Date.now() > VALID_CODES[code];
 }
 
-@keyframes flow {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
+// ----------- LOCKOUT HANDLING -----------
+function lockedOut() {
+  const lockUntil = Date.now() + 5 * 60 * 1000; // 5 minutes
+  localStorage.setItem("lockout_until", lockUntil);
 }
 
-.bottom-half h2 {
-  color: #000;
-  font-size: 1.5rem;
-  margin: 0 0 10px 0;
-  z-index: 2;
-  position: relative;
+function isLocked() {
+  const until = localStorage.getItem("lockout_until");
+  if (!until) return false;
+  return Date.now() < parseInt(until);
 }
 
-.qr-container {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 10%;
-  z-index: 2;
-  opacity: 0;
-  transition: opacity 1s ease;
+// ------------------------------------------------
+// PAYMENT CONFIRMATION → ADMIN NOTIFICATION
+// ------------------------------------------------
+function confirmPayment() {
+  const userName = document.getElementById("userNameInput").value.trim();
+  const userWA = document.getElementById("userWAInput").value.trim();
+
+  if (!userName || !userWA) {
+    alert("Please fill in your Name and WA # before confirming payment.");
+    return;
+  }
+
+  // Locked?
+  if (isLocked()) {
+    alert("Too many attempts. Try again later.");
+    return;
+  }
+
+  alert(
+    "Admin will provide your unlock code.\nYou must send the payment proof first."
+  );
+
+  const action = confirm(
+    "Press OK to send payment proof.\nPress CANCEL to stop."
+  );
+
+  if (!action) {
+    alert("Payment process canceled.");
+    return;
+  }
+
+  // WhatsApp Notification
+  const adminMsg =
+    `NEW PAYMENT REQUEST\n\n` +
+    `Name: ${userName}\n` +
+    `WA #: ${userWA}\n` +
+    `Session: ${encryptedSession}\n\n` +
+    `Send UNLOCK CODE manually.\n` +
+    `Press 1 to approve (issue code)\nPress 2 to deny.`;
+
+  window.open(
+    `https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,
+    "_blank"
+  );
+
+  alert("Admin notified. Please wait for admin to provide unlock code.");
+
+  unlockAllowed = true;
+  const btn = document.getElementById("continue-btn");
+  if (btn) btn.disabled = false;
 }
 
-.contacts {
-  margin-top: 10px;
-  z-index: 2;
-  position: relative;
+// ------------------------------------------------
+// VERIFY UNLOCK CODE
+// ------------------------------------------------
+function checkUnlockCode() {
+  if (!unlockAllowed) {
+    alert("You must send payment proof first.");
+    return;
+  }
+
+  if (isLocked()) {
+    alert("Too many attempts. Try again later.");
+    return;
+  }
+
+  const code = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
+
+  if (!code) {
+    alert("Enter the unlock code first.");
+    return;
+  }
+
+  attempts++;
+
+  // Not a valid code in dictionary
+  if (!VALID_CODES.hasOwnProperty(code)) {
+    alert("Invalid unlock code.");
+    punishment();
+    return;
+  }
+
+  // First time → activate expiration
+  if (VALID_CODES[code] === null) {
+    setCodeTimer(code);
+  }
+
+  // Expired?
+  if (isCodeExpired(code)) {
+    alert("This unlock code has expired. Request a new one.");
+    punishment();
+    return;
+  }
+
+  // SUCCESS
+  alert("Unlock successful! Redirecting...");
+
+  // Burn code
+  delete VALID_CODES[code];
+
+  // Clear session
+  localStorage.removeItem("secure_session");
+  localStorage.removeItem("lockout_until");
+
+  window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
 }
 
-.contacts a img {
-  width: 35px;
-  margin-right: 10px;
-  vertical-align: middle;
-  cursor: pointer;
-  transition: 0.3s;
+// ------------------------------------------------
+// WRONG ATTEMPTS HANDLER
+// ------------------------------------------------
+function punishment() {
+  if (attempts >= MAX_ATTEMPTS) {
+    alert("Too many wrong attempts. Locked for 5 minutes.");
+    lockedOut();
+  } else {
+    alert(`Wrong code. Attempts left: ${MAX_ATTEMPTS - attempts}`);
+  }
 }
-
-.contacts a img:hover {
-  transform: scale(1.2);
-}
-
-.buttons {
-  margin-top: 15px;
-  z-index: 2;
-  position: relative;
-}
-
-button {
-  padding: 10px 20px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: 0.3s;
-}
-
-#continue-btn {
-  background-color: #28a745;
-  color: #fff;
-}
-
-#continue-btn:hover {
-  background-color: #218838;
-}
-
-#confirm-btn {
-  background-color: #007bff;
-  color: #fff;
-}
-
-#confirm-btn:hover {
-  background-color: #0056b3;
-}
-
-input.unlock-code {
-  padding: 5px;
-  width: 150px;
-  margin-right: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .qr-container { width: 20%; }
-  input.unlock-code { width: 100px; }
-  .bottom-half h2 { font-size: 1.2rem; }
-  .contacts a img { width: 30px; margin-right: 8px; }
-}
-</style>
-</head>
-<body>
-
-<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg"></div>
-
-<div class="bottom-half">
-  <div class="water-flow"></div>
-  <h2>Check the QR Dana to put IDR 50k</h2>
-  <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
-
-  <div class="contacts">
-    <a href="https://wa.me/6285399652487" target="_blank" title="WhatsApp">
-      <img src="assets/whatsapp.svg" alt="WA Icon">
-    </a>
-    <a href="mailto:gyoutrain@gmail.com" target="_blank" title="Email">
-      <img src="assets/email.svg" alt="Email Icon">
-    </a>
-    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank" title="Instagram">
-      <img src="assets/instagram.svg" alt="Instagram Icon">
-    </a>
-    <a href="https://t.me/etkyogyakarta" target="_blank" title="Telegram">
-      <img src="assets/telegram.svg" alt="Telegram Icon">
-    </a>
-  </div>
-
-  <div class="buttons">
-    <button id="confirm-btn" onclick="alert('Please send a message via one of the above social media to confirm payment.')">Confirmation</button>
-    <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code">
-    <button id="continue-btn" onclick="checkUnlockCode()">Continue the Test</button>
-  </div>
-</div>
-
-<script>
-const API_URL = "PASTE_YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE";
-
-// Lazy-load images
-function lazyLoadImage(img) {
-  const src = img.getAttribute('data-src');
-  if(src){ img.src = src; img.style.opacity=1; img.removeAttribute('data-src'); }
-}
-
-window.addEventListener('load',()=>{
-  const top = document.getElementById('topHalf');
-  const qr = document.getElementById('danaQR');
-  top.style.backgroundImage = `url('${top.getAttribute('data-src')}')`;
-  lazyLoadImage(qr);
-});
-
-// Unlock code check
-async function checkUnlockCode(){
-  const input = document.getElementById('unlockCodeInput').value.trim();
-  if(!input){ alert("Please enter the unlock code."); return; }
-  try{
-    const res = await fetch(`${API_URL}?code=${encodeURIComponent(input)}`);
-    const data = await res.json();
-    if(data.status==="ok"){ window.location.href="https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/"; }
-    else{ alert("Invalid or already used code. Please confirm payment via WhatsApp first."); }
-  }catch(err){ alert("Error connecting to server. Try again later."); console.error(err); }
-}
-</script>
-
-</body>
-</html>
