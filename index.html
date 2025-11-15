@@ -5,158 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nursing Prometric Test - Landing</title>
 <style>
-body, html {
-  margin: 0; padding: 0;
-  font-family: Arial, sans-serif;
-  height: 100%;
-  overflow-x: hidden;
-  background: #eef5f5;
-}
-
-.top-half {
-  width: 100%;
-  height: 50vh;
-  background: url('assets/icon17%20(1).jpg') center/cover no-repeat;
-}
-
-.bottom-half {
-  width: 100%;
-  height: 50vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow: hidden;
-  background: #eef5f5;
-}
-
-/* Flowing image as water effect */
-.water-flow {
-  position: absolute;
-  top: 0; left: 0;
-  width: 200%;
-  height: 200%;
-  background: url('assets/icon17%20(1).jpg') repeat;
-  opacity: 0.2;
-  background-size: cover;
-  animation: flow 15s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes flow {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-.bottom-half h2 {
-  color: #000;
-  font-size: 1.5rem;
-  margin: 0 0 10px 0;
-  z-index: 2;
-  position: relative;
-}
-
-.qr-container {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 25%;
-  max-width: 200px;
-  z-index: 2;
-  opacity: 1;
-}
-
-/* User input section */
-.user-info {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #000;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.user-info input {
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 0.9rem;
-  width: calc(50% - 10px);
-}
-
-/* Social icons */
-.social-icons {
-  margin-top: 15px;
-  display: flex;
-  gap: 15px;
-  z-index: 2;
-  position: relative;
-}
-
-.social-icons a img {
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: transform 0.3s;
-}
-
-.social-icons a img:hover {
-  transform: scale(1.2);
-}
-
-.buttons {
-  margin-top: 15px;
-  z-index: 2;
-  position: relative;
-}
-
-button {
-  padding: 10px 20px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: 0.3s;
-}
-
-#continue-btn {
-  background-color: #28a745;
-  color: #fff;
-}
-
-#continue-btn:hover {
-  background-color: #218838;
-}
-
-#confirm-btn {
-  background-color: #007bff;
-  color: #fff;
-}
-
-#confirm-btn:hover {
-  background-color: #0056b3;
-}
-
-input.unlock-code {
-  padding: 5px;
-  width: 150px;
-  margin-right: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .qr-container { width: 50%; max-width: 250px; }
-  input.unlock-code { width: 100px; }
-  .bottom-half h2 { font-size: 1.2rem; }
-  .social-icons a img { width: 30px; height: 30px; }
-  .user-info input { width: 100%; }
-}
+/* ... same CSS from previous HTML ... */
+body, html { margin:0; padding:0; font-family: Arial,sans-serif; height:100%; overflow-x:hidden; background:#eef5f5;}
+.top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; }
+.bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
+.water-flow { position:absolute; top:0; left:0; width:200%; height:200%; background:url('assets/icon17%20(1).jpg') repeat; opacity:0.2; background-size:cover; animation:flow 15s linear infinite; pointer-events:none;}
+@keyframes flow { 0%{ transform:translate(-50%,-50%) rotate(0deg);}100%{ transform:translate(-50%,-50%) rotate(360deg);}}
+.bottom-half h2 { color:#000; font-size:1.5rem; margin:0 0 10px 0; z-index:2; position:relative; }
+.qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; opacity:1; }
+.user-info { margin-top:10px; font-size:0.9rem; color:#000; display:flex; flex-wrap:wrap; gap:10px;}
+.user-info input { padding:5px 10px; border-radius:5px; border:1px solid #ccc; font-size:0.9rem; width:calc(50% - 10px);}
+.social-icons { margin-top:15px; display:flex; gap:15px; z-index:2; position:relative;}
+.social-icons a img { width:40px; height:40px; cursor:pointer; transition: transform 0.3s;}
+.social-icons a img:hover { transform: scale(1.2);}
+.buttons { margin-top:15px; z-index:2; position:relative;}
+button { padding:10px 20px; margin-right:10px; border:none; border-radius:8px; cursor:pointer; font-size:1rem; transition:0.3s;}
+#continue-btn { background-color:#28a745; color:#fff;}
+#continue-btn:hover { background-color:#218838;}
+#confirm-btn { background-color:#007bff; color:#fff;}
+#confirm-btn:hover { background-color:#0056b3;}
+input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5px; border:1px solid #ccc;}
+@media (max-width:768px) { .qr-container{width:50%; max-width:250px;} input.unlock-code{width:100px;} .bottom-half h2{font-size:1.2rem;} .social-icons a img{width:30px;height:30px;} .user-info input{width:100%;}}
 </style>
 </head>
 <body>
@@ -168,19 +37,17 @@ input.unlock-code {
   <h2>Check the QR Dana to put IDR 50k</h2>
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
-  <!-- User input for name and WA number -->
   <div class="user-info">
     <input type="text" id="userNameInput" placeholder="Enter your name" required>
     <input type="text" id="userWAInput" placeholder="Enter your WA #" required>
   </div>
 
-  <!-- Social icons -->
   <div class="social-icons">
-    <a href="tel:+6285399652487" title="Call"><img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Call"></a>
-    <a href="https://wa.me/6285399652487" target="_blank" title="WhatsApp"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
-    <a href="mailto:gyoutrain@gmail.com" target="_blank" title="Email"><img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Email"></a>
-    <a href="https://web.facebook.com/gyouskill/?_rdc=1&_rdr#" target="_blank" title="Facebook"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
-    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank" title="Instagram"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"></a>
+    <a href="tel:+6285399652487"><img src="https://cdn-icons-png.flaticon.com/512/597/597177.png"></a>
+    <a href="https://wa.me/6285399652487" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
+    <a href="mailto:gyoutrain@gmail.com"><img src="https://cdn-icons-png.flaticon.com/512/732/732200.png"></a>
+    <a href="https://web.facebook.com/gyouskill/?_rdc=1&_rdr#" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></a>
+    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png"></a>
   </div>
 
   <div class="buttons">
@@ -191,91 +58,49 @@ input.unlock-code {
 </div>
 
 <script>
-// Lazy-load images
-function lazyLoadImage(img) {
-  const src = img.getAttribute('data-src');
-  if(src){ img.src = src; img.style.opacity=1; img.removeAttribute('data-src'); }
-}
+function lazyLoadImage(img){ const src=img.getAttribute('data-src'); if(src){img.src=src; img.style.opacity=1; img.removeAttribute('data-src');}}
+window.addEventListener('load',()=>{ const top=document.getElementById('topHalf'); const qr=document.getElementById('danaQR'); top.style.backgroundImage=`url('${top.getAttribute('data-src')}')`; lazyLoadImage(qr);});
 
-window.addEventListener('load',()=>{
-  const top = document.getElementById('topHalf');
-  const qr = document.getElementById('danaQR');
-  top.style.backgroundImage = `url('${top.getAttribute('data-src')}')`;
-  lazyLoadImage(qr);
-});
+let unlockCode=""; let paymentApproved=false;
 
-// ------------------------
-// Unlock code workflow with Google Sheet
-// ------------------------
-let unlockCode = "";
-let paymentApproved = false;
-
-// Called when user clicks "Confirmation"
 function confirmPayment(){
-  const name = document.getElementById("userNameInput").value.trim();
-  const wa = document.getElementById("userWAInput").value.trim();
+  const name=document.getElementById("userNameInput").value.trim();
+  const wa=document.getElementById("userWAInput").value.trim();
+  if(!name||!wa){ alert("Please fill in Name and WA."); return;}
 
-  if(!name || !wa){
-    alert("Please fill in your Name and WA # before confirming payment.");
-    return;
-  }
+  const adminMsg=`Payment Pending:\nName: ${name}\nWA #: ${wa}\nOptions: 1️⃣ Confirm Payment & Send Unlock Code`;
+  window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,"_blank");
 
-  // Notify admin via WhatsApp
-  const adminMsg = `Payment Pending:
-Name: ${name}
-WA #: ${wa}
-Options:
-1️⃣ Confirm Payment & Send Unlock Code`;
+  document.getElementById("unlockCodeInput").disabled=true;
+  document.getElementById("continue-btn").disabled=true;
 
-  window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`, "_blank");
+  const GAS_URL="https://script.google.com/macros/s/AKfycbxMCP1aC2Tus7OVxBYlwX1AYtzz7UB2GW8tG7itq7iUade9FysuqPZBt3uVKbRUaACDTA/exec"; // <-- replace with your deployed Web App URL
 
-  document.getElementById("unlockCodeInput").disabled = true;
-  document.getElementById("continue-btn").disabled = true;
-
-  // Check Google Sheet for approval every 3 seconds until approved
-  const GAS_URL = "const GAS_URL = "https://script.google.com/macros/s/AKfycby5cMh9rNSU3s2GNXqup5_uOPlQAQXtlzuBWIDiMErCBBQR3p-VsZjBjT8T3U_7Oxvszw/exec";"; // <-- replace with your deployment URL
-  const intervalId = setInterval(() => {
-    fetch(GAS_URL, {
-      method: "POST",
-      body: JSON.stringify({name: name, wa: wa})
-    })
-    .then(res => res.json())
-    .then(data => {
-      if(data.status === "approved"){
-        unlockCode = data.unlockCode.toUpperCase();
-        paymentApproved = true;
-        document.getElementById("unlockCodeInput").disabled = false;
-        document.getElementById("continue-btn").disabled = false;
+  const intervalId=setInterval(()=>{
+    fetch(GAS_URL,{method:"POST", body:JSON.stringify({name:name,wa:wa})})
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.status==="approved"){
+        unlockCode=data.unlockCode.toUpperCase();
+        paymentApproved=true;
+        document.getElementById("unlockCodeInput").disabled=false;
+        document.getElementById("continue-btn").disabled=false;
         clearInterval(intervalId);
-        alert("Payment confirmed by admin. Enter the unlock code to continue.");
+        alert("Payment confirmed. Enter unlock code to continue.");
       }
-    })
-    .catch(err => console.log("Error checking approval:", err));
-  }, 3000); // every 3 seconds
+    }).catch(err=>console.log("Error checking approval:",err));
+  },3000);
 }
 
-// Validate unlock code
 function checkUnlockCode(){
-  const codeInput = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
-
-  if(!codeInput){
-    alert("Enter the unlock code sent by admin.");
-    return;
-  }
-
-  if(!paymentApproved){
-    alert("Unlock code not approved by admin yet. Wait for approval.");
-    return;
-  }
-
-  if(codeInput === unlockCode){
-    alert("Unlock code valid! Redirecting to the test...");
-    window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
-  } else {
-    alert("Invalid unlock code. Please check with admin.");
-  }
+  const codeInput=document.getElementById("unlockCodeInput").value.trim().toUpperCase();
+  if(!codeInput){ alert("Enter unlock code."); return;}
+  if(!paymentApproved){ alert("Wait for admin approval."); return;}
+  if(codeInput===unlockCode){
+    alert("Unlock code valid! Redirecting...");
+    window.location.href="https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
+  }else{ alert("Invalid unlock code. Check with admin."); }
 }
 </script>
-
 </body>
 </html>
