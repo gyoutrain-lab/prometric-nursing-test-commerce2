@@ -131,6 +131,13 @@ input.unlock-code {
   border: 1px solid #ccc;
 }
 
+/* User info small section */
+.user-info {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #000;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .qr-container { width: 20%; }
@@ -148,6 +155,14 @@ input.unlock-code {
   <div class="water-flow"></div>
   <h2>Check the QR Dana to put IDR 50k</h2>
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
+
+  <!-- User account section -->
+  <div class="user-info">
+    Name: <strong>John Doe</strong> | 
+    <a href="https://wa.me/6285399652487?text=Payment%20Confirmed%20from%20John%20Doe" target="_blank">
+      WA #: +62 853-9965-2487
+    </a>
+  </div>
 
   <!-- Social icons -->
   <div class="social-icons">
@@ -176,9 +191,6 @@ input.unlock-code {
 </div>
 
 <script>
-const API_URL = "Phttps://script.google.com/macros/s/AKfycby1Z_nhu2HqvUbFzheSqJdCNhCM81SkBuyaHl0T-V1Kk1Hse4H1Lfz1WodegrSc0NuK/exec";
-const USER_ID = "USER_UNIQUE_ID"; // Replace with actual unique user ID
-
 // Lazy-load images
 function lazyLoadImage(img) {
   const src = img.getAttribute('data-src');
@@ -192,44 +204,29 @@ window.addEventListener('load',()=>{
   lazyLoadImage(qr);
 });
 
-// Step 1: User clicks Confirmation
-async function confirmPayment() {
-  alert("Please press 1 to confirm your payment.\nWhen you click OK, a message will be sent to the admin.");
+// Confirmation button workflow
+function confirmPayment() {
+  const userName = "John Doe"; // Replace with actual user name dynamically if needed
+  const userWA = "+6285399652487"; // User WA number
 
-  try {
-    const response = await fetch(`${API_URL}?action=confirm_payment&user_id=${encodeURIComponent(USER_ID)}`);
-    const data = await response.json();
+  alert("Click OK to notify the Admin to send the unlock code.");
 
-    if(data.status === "ok") {
-      alert("Payment confirmed. Unlock code has been generated and sent to your WhatsApp / saved in the sheet.");
-      document.getElementById("continue-btn").disabled = false;
-    } else {
-      alert("Failed to send confirmation. Please try again.");
-    }
-  } catch(err) {
-    console.error(err);
-    alert("Error connecting to server. Try again later.");
-  }
+  // Send notification to Admin via WhatsApp link
+  window.open(`https://wa.me/6285399652487?text=Payment%20Confirmed%20from%20${encodeURIComponent(userName)}%20-%20WA%20#: ${encodeURIComponent(userWA)}`, "_blank");
+
+  // Enable Continue button (optional: could wait until admin sends code)
+  document.getElementById("continue-btn").disabled = false;
 }
 
-// Step 2: Check Unlock Code
-async function checkUnlockCode() {
+// Continue button - user enters unlock code manually sent by admin
+function checkUnlockCode() {
   const code = document.getElementById("unlockCodeInput").value.trim();
   if(!code){ alert("Enter the unlock code first."); return; }
 
-  try {
-    const response = await fetch(`${API_URL}?action=check_code&code=${encodeURIComponent(code)}&user_id=${encodeURIComponent(USER_ID)}`);
-    const data = await response.json();
-
-    if(data.status==="ok") {
-      window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
-    } else {
-      alert("Invalid unlock code. Please confirm payment first.");
-    }
-  } catch(err) {
-    console.error(err);
-    alert("Error connecting to server.");
-  }
+  // Optional: validate code via Google Apps Script
+  alert("Code entered: " + code + "\nAdmin should have sent this to you via WhatsApp.");
+  // Replace next line with actual redirection after validation
+  window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
 }
 </script>
 
