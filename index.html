@@ -1,332 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nursing Prometric Test - Landing</title>
-<style>
-body, html {
-  margin: 0; padding: 0;
-  font-family: Arial, sans-serif;
-  height: 100%;
-  overflow-x: hidden;
-  background: #eef5f5;
+// ---------------------------------------------------
+// SECURE FRONTEND-ONLY UNLOCK SYSTEM (ADMIN CONTROLLED)
+// ---------------------------------------------------
+
+// Generate unique session ID for each user
+let sessionID = "SID-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+
+// Store session ID so refresh cannot reset it
+if (!localStorage.getItem("unlock_sessionID")) {
+  localStorage.setItem("unlock_sessionID", sessionID);
+} else {
+  sessionID = localStorage.getItem("unlock_sessionID");
 }
 
-.top-half {
-  width: 100%;
-  height: 50vh;
-  background: url('assets/icon17%20(1).jpg') center/cover no-repeat;
-}
+// Track unlock state
+let unlockAllowed = false;
+let attempts = 0;
+const MAX_ATTEMPTS = 3;
 
-.bottom-half {
-  width: 100%;
-  height: 50vh;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 20px;
-  box-sizing: border-box;
-  overflow: hidden;
-  background: #eef5f5;
-}
+// Admin creates unlock codes (manual, private)
+const VALID_CODES = ["GY500A", "GY500B", "GY500C"]; // You can change anytime
 
-/* Flowing image as water effect */
-.water-flow {
-  position: absolute;
-  top: 0; left: 0;
-  width: 200%;
-  height: 200%;
-  background: url('assets/icon17%20(1).jpg') repeat;
-  opacity: 0.2;
-  background-size: cover;
-  animation: flow 15s linear infinite;
-  pointer-events: none;
-}
+function confirmPayment() {
+  const userName = document.getElementById("userNameInput").value.trim();
+  const userWA = document.getElementById("userWAInput").value.trim();
 
-@keyframes flow {
-  0% { transform: translate(-50%, -50%) rotate(0deg); }
-  100% { transform: translate(-50%, -50%) rotate(360deg); }
-}
-
-.bottom-half h2 {
-  color: #000;
-  font-size: 1.5rem;
-  margin: 0 0 10px 0;
-  z-index: 2;
-  position: relative;
-}
-
-.qr-container {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 15%;
-  z-index: 2;
-  opacity: 1;
-  transition: opacity 1s ease;
-}
-
-/* User input section */
-.user-info {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #000;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.user-info input {
-  padding: 5px 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 0.9rem;
-  width: calc(50% - 10px);
-}
-
-/* Social icons */
-.social-icons {
-  margin-top: 15px;
-  display: flex;
-  gap: 15px;
-  z-index: 2;
-  position: relative;
-}
-
-.social-icons a img {
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: transform 0.3s;
-}
-
-.social-icons a img:hover {
-  transform: scale(1.2);
-}
-
-.buttons {
-  margin-top: 15px;
-  z-index: 2;
-  position: relative;
-}
-
-button {
-  padding: 10px 20px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: 0.3s;
-}
-
-#continue-btn {
-  background-color: #28a745;
-  color: #fff;
-}
-
-#continue-btn:hover {
-  background-color: #218838;
-}
-
-#confirm-btn {
-  background-color: #007bff;
-  color: #fff;
-}
-
-#confirm-btn:hover {
-  background-color: #0056b3;
-}
-
-input.unlock-code {
-  padding: 5px;
-  width: 150px;
-  margin-right: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .qr-container { width: 25%; }
-  input.unlock-code { width: 100px; }
-  .bottom-half h2 { font-size: 1.2rem; }
-  .social-icons a img { width: 30px; height: 30px; }
-  .user-info input { width: 100%; }
-}
-</style>
-</head>
-<body>
-
-<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg"></div>
-
-<div class="bottom-half">
-  <div class="water-flow"></div>
-  <h2>Check the QR Dana to put IDR 50k</h2>
-  <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
-
-  <!-- User input for name and WA number -->
-  <div class="user-info">
-    <input type="text" id="userNameInput" placeholder="Enter your name" required>
-    <input type="text" id="userWAInput" placeholder="Enter your WA #" required>
-  </div>
-
-  <!-- Social icons -->
-  <div class="social-icons">
-    <a href="tel:+6285399652487" title="Call"><img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Call"></a>
-    <a href="https://wa.me/6285399652487" target="_blank" title="WhatsApp"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
-    <a href="mailto:gyoutrain@gmail.com" target="_blank" title="Email"><img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Email"></a>
-    <a href="https://web.facebook.com/gyouskill/?_rdc=1&_rdr#" target="_blank" title="Facebook"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
-    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank" title="Instagram"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"></a>
-  </div>
-
-  <div class="buttons">
-    <button id="confirm-btn" onclick="confirmPayment()">Confirmation</button>
-    <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code">
-    <button id="continue-btn" onclick="checkUnlockCode()" disabled>Continue the Test</button>
-  </div>
-</div>
-
-<script>
-// Lazy-load images
-function lazyLoadImage(img) {
-  const src = img.getAttribute('data-src');
-  if(src){ img.src = src; img.style.opacity=1; img.removeAttribute('data-src'); }
-}
-
-window.addEventListener('load',()=>{
-  const top = document.getElementById('topHalf');
-  const qr = document.getElementById('danaQR');
-  top.style.backgroundImage = `url('${top.getAttribute('data-src')}')`;
-  lazyLoadImage(qr);
-});
-
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nursing Unlock System</title>
-<style>
-body { font-family: Arial; padding: 20px; }
-input, button { padding: 10px; margin: 5px; width: 100%; }
-#continueSection { display: none; }
-</style>
-</head>
-<body>
-
-<h2>Register & Continue</h2>
-
-<input id="name" placeholder="Your Name">
-<input id="wa" placeholder="WhatsApp Number (628...)">
-<input id="userId" placeholder="User ID (auto or manual)">
-<button onclick="registerUser()">Register</button>
-
-<hr>
-
-<h2>Continue Unlock</h2>
-<button onclick="checkUnlock()">Check Unlock Status</button>
-
-<div id="continueSection">
-  <p><b>Unlock Code:</b> <span id="unlockCode"></span></p>
-  <button onclick="alert('Next Test Opened!')">Continue to Test</button>
-</div>
-
-<script>
-// Your deployed Apps Script Web App URL:
-const API = "YOUR_WEB_APP_URL";
-
-// Register user
-async function registerUser() {
-  const name = document.getElementById("name").value;
-  const wa = document.getElementById("wa").value;
-  const userId = document.getElementById("userId").value;
-
-  // notify admin
-  const adminRes = await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "notifyAdmin",
-      name, wa, userId
-    })
-  });
-  const adminData = await adminRes.json();
-
-  window.open(adminData.link, "_blank");
-
-  // register to sheet
-  const res = await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "register",
-      name, wa, userId
-    })
-  });
-  const data = await res.json();
-
-  alert("Admin notified. Wait for unlock.");
-}
-
-// Check unlock
-async function checkUnlock() {
-  const userId = document.getElementById("userId").value;
-
-  const res = await fetch(API, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "checkUnlock",
-      userId
-    })
-  });
-  const data = await res.json();
-
-  if (data.success) {
-    document.getElementById("unlockCode").textContent = data.unlockCode;
-    document.getElementById("continueSection").style.display = "block";
-    alert("Unlocked!");
-  } else {
-    alert("Not unlocked yet. Ask admin to fill the sheet.");
+  if (!userName || !userWA) {
+    alert("Please fill in your Name and WA # before confirming payment.");
+    return;
   }
-}
-</script>
 
-</body>
-</html>
-// Continue button validation (secure)
+  // Step 1: Inform user
+  alert(
+    "Admin will provide your unlock code.\nPlease send your payment proof first."
+  );
+
+  // Step 2: Ask user to send proof
+  const action = confirm("Press OK to send payment proof.\nPress CANCEL to stop.");
+
+  if (!action) {
+    alert("Payment process canceled.");
+    return;
+  }
+
+  // User chooses OK → Send details to admin
+  const adminMsg =
+    `NEW PAYMENT REQUEST\n\n` +
+    `Name: ${userName}\n` +
+    `WA #: ${userWA}\n` +
+    `Session ID: ${sessionID}\n\n` +
+    `User requested unlock.\n` +
+    `Send unlock code manually.\n` +
+    `Press 1 to approve, 2 to deny.`;
+
+  // WhatsApp notification
+  window.open(
+    `https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,
+    "_blank"
+  );
+
+  alert("Admin notified. Please wait for admin to give your unlock code.");
+  unlockAllowed = true;
+  document.getElementById("continue-btn").disabled = false;
+}
+
 function checkUnlockCode() {
-  const codeInput = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
-
-  if (!codeInput) {
-    alert("Enter the unlock code first.");
+  if (!unlockAllowed) {
+    alert("You must send the payment proof first.");
     return;
   }
 
-  if (ADMIN_UNLOCK_CODES.includes(codeInput)) {
-    alert("Unlock code valid! Redirecting to the test...");
-    window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
-  } else {
-    alert("Invalid unlock code. Please check with admin.");
-  }
-}
+  const code = document
+    .getElementById("unlockCodeInput")
+    .value.trim()
+    .toUpperCase();
 
-// Continue button validation
-function checkUnlockCode(){
-  const codeInput = document.getElementById("unlockCodeInput").value.trim();
-  if(!codeInput){
-    alert("Enter the unlock code first.");
+  if (!code) {
+    alert("Enter the unlock code.");
     return;
   }
 
-  if(codeInput === generatedCode){
-    alert("Unlock code valid! Redirecting to the test...");
-    window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
+  // Max attempts control
+  attempts++;
+  if (attempts > MAX_ATTEMPTS) {
+    alert("Too many wrong attempts. Access blocked.");
+    return;
+  }
+
+  // Validate against admin's codes
+  if (VALID_CODES.includes(code)) {
+    alert("Unlock successful! Redirecting...");
+    localStorage.removeItem("unlock_sessionID"); // Clear session
+    window.location.href =
+      "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
   } else {
-    alert("Invalid unlock code. Please check with admin.");
+    alert("Incorrect code. Attempts left: " + (MAX_ATTEMPTS - attempts));
   }
 }
-</script>
-
-</body>
-</html>
