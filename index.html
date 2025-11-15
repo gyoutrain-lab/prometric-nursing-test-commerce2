@@ -205,54 +205,65 @@ window.addEventListener('load',()=>{
 });
 
 // ------------------------
-// Admin-controlled Unlock Workflow
+// Unlock code workflow with Google Sheet
 // ------------------------
 let unlockCode = "";
-let adminApproved = false;
+let paymentApproved = false;
 
+// Called when user clicks "Confirmation"
 function confirmPayment(){
-  const userName = document.getElementById("userNameInput").value.trim();
-  const userWA = document.getElementById("userWAInput").value.trim();
+  const name = document.getElementById("userNameInput").value.trim();
+  const wa = document.getElementById("userWAInput").value.trim();
 
-  if(!userName || !userWA){
+  if(!name || !wa){
     alert("Please fill in your Name and WA # before confirming payment.");
     return;
   }
 
+  // Notify admin via WhatsApp
   const adminMsg = `Payment Pending:
-Name: ${userName}
-WA #: ${userWA}
+Name: ${name}
+WA #: ${wa}
 Options:
-1️⃣ Send Unlock Code
-2️⃣ Mark Unlock in Progress`;
+1️⃣ Confirm Payment & Send Unlock Code`;
 
   window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`, "_blank");
 
-  document.getElementById("continue-btn").disabled = true;
   document.getElementById("unlockCodeInput").disabled = true;
+  document.getElementById("continue-btn").disabled = true;
 
-  alert("Wait for the admin to approve and send the unlock code.");
-}
-
-// Call this function manually after admin approves
-function adminSendUnlockCode(code){
-  unlockCode = code.toUpperCase();
-  adminApproved = true;
-  document.getElementById("unlockCodeInput").disabled = false;
-  document.getElementById("unlockCodeInput").value = "";
-  document.getElementById("continue-btn").disabled = false;
-  alert("Admin has sent the unlock code. Enter it to continue.");
+  // Check Google Sheet for approval every 3 seconds until approved
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbx1234567890abcdefGHIJKLMNOP"; // replace with your deployed GAS URL
+  const intervalId = setInterval(() => {
+    fetch(GAS_URL, {
+      method: "POST",
+      body: JSON.stringify({name: name, wa: wa})
+    })
+    .then(res => res.json())
+    .then(data => {
+      if(data.status === "approved"){
+        unlockCode = data.unlockCode.toUpperCase();
+        paymentApproved = true;
+        document.getElementById("unlockCodeInput").disabled = false;
+        document.getElementById("continue-btn").disabled = false;
+        clearInterval(intervalId);
+        alert("Payment confirmed by admin. Enter the unlock code to continue.");
+      }
+    })
+    .catch(err => console.log("Error checking approval:", err));
+  }, 3000); // every 3 seconds
 }
 
 // Validate unlock code
 function checkUnlockCode(){
   const codeInput = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
+
   if(!codeInput){
     alert("Enter the unlock code sent by admin.");
     return;
   }
 
-  if(!adminApproved){
+  if(!paymentApproved){
     alert("Unlock code not approved by admin yet. Wait for approval.");
     return;
   }
