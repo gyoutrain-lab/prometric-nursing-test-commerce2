@@ -63,10 +63,9 @@ body, html {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 15%;
+  width: 25%;
   z-index: 2;
   opacity: 1;
-  transition: opacity 1s ease;
 }
 
 /* User input section */
@@ -151,7 +150,7 @@ input.unlock-code {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .qr-container { width: 30%; }
+  .qr-container { width: 40%; }
   input.unlock-code { width: 100px; }
   .bottom-half h2 { font-size: 1.2rem; }
   .social-icons a img { width: 30px; height: 30px; }
@@ -219,8 +218,6 @@ function confirmPayment(){
     return;
   }
 
-  alert("Click OK to notify the Admin to review your payment.");
-
   const adminMsg = `Payment Pending:
 Name: ${userName}
 WA #: ${userWA}
@@ -228,10 +225,8 @@ Options:
 1️⃣ Send Unlock Code
 2️⃣ Mark Unlock in Progress`;
 
-  // Open WhatsApp link for admin
   window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`, "_blank");
 
-  // Keep Continue button disabled until admin approval
   document.getElementById("continue-btn").disabled = true;
   document.getElementById("unlockCodeInput").disabled = true;
 
