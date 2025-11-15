@@ -2,7 +2,7 @@
 // SECURITY LEVEL 2 — ADVANCED FRONTEND PROTECTION
 // -----------------------------------------------------
 
-// Generate secure encrypted session token
+// ----------- ENCRYPTED SESSION TOKEN -----------
 function encryptSession(str) {
   return btoa(unescape(encodeURIComponent(str)));
 }
@@ -17,35 +17,33 @@ if (!localStorage.getItem("secure_session")) {
   encryptedSession = localStorage.getItem("secure_session");
 }
 
-// Track unlock state
+// ----------- UNLOCK SYSTEM CONTROL -----------
 let unlockAllowed = false;
 let attempts = 0;
 const MAX_ATTEMPTS = 3;
 
-// Admin-managed one-time unlock codes
+// Admin-managed One-Time Codes
 let VALID_CODES = {
   "GY500A": null,
   "GY500B": null,
   "GY500C": null
 };
 
-// Code expiration setup (10 minutes)
+// Code expires in 10 minutes
 const EXPIRATION_MS = 10 * 60 * 1000;
 
-// Set expiration once admin approves code
 function setCodeTimer(code) {
   VALID_CODES[code] = Date.now() + EXPIRATION_MS;
 }
 
-// Check expiration
 function isCodeExpired(code) {
   if (!VALID_CODES[code]) return true;
   return Date.now() > VALID_CODES[code];
 }
 
-// Lockout with penalty
+// ----------- LOCKOUT HANDLING -----------
 function lockedOut() {
-  const lockUntil = Date.now() + 5 * 60 * 1000;
+  const lockUntil = Date.now() + 5 * 60 * 1000; // 5 minutes
   localStorage.setItem("lockout_until", lockUntil);
 }
 
@@ -55,6 +53,9 @@ function isLocked() {
   return Date.now() < parseInt(until);
 }
 
+// ------------------------------------------------
+// PAYMENT CONFIRMATION → ADMIN NOTIFICATION
+// ------------------------------------------------
 function confirmPayment() {
   const userName = document.getElementById("userNameInput").value.trim();
   const userWA = document.getElementById("userWAInput").value.trim();
@@ -64,7 +65,7 @@ function confirmPayment() {
     return;
   }
 
-  // Block if locked
+  // Locked?
   if (isLocked()) {
     alert("Too many attempts. Try again later.");
     return;
@@ -74,14 +75,16 @@ function confirmPayment() {
     "Admin will provide your unlock code.\nYou must send the payment proof first."
   );
 
-  const action = confirm("Press OK to send payment proof.\nPress CANCEL to stop.");
+  const action = confirm(
+    "Press OK to send payment proof.\nPress CANCEL to stop."
+  );
 
   if (!action) {
     alert("Payment process canceled.");
     return;
   }
 
-  // WhatsApp admin notification
+  // WhatsApp Notification
   const adminMsg =
     `NEW PAYMENT REQUEST\n\n` +
     `Name: ${userName}\n` +
@@ -96,10 +99,15 @@ function confirmPayment() {
   );
 
   alert("Admin notified. Please wait for admin to provide unlock code.");
+
   unlockAllowed = true;
-  document.getElementById("continue-btn").disabled = false;
+  const btn = document.getElementById("continue-btn");
+  if (btn) btn.disabled = false;
 }
 
+// ------------------------------------------------
+// VERIFY UNLOCK CODE
+// ------------------------------------------------
 function checkUnlockCode() {
   if (!unlockAllowed) {
     alert("You must send payment proof first.");
@@ -111,10 +119,7 @@ function checkUnlockCode() {
     return;
   }
 
-  const code = document
-    .getElementById("unlockCodeInput")
-    .value.trim()
-    .toUpperCase();
+  const code = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
 
   if (!code) {
     alert("Enter the unlock code first.");
@@ -123,39 +128,41 @@ function checkUnlockCode() {
 
   attempts++;
 
+  // Not a valid code in dictionary
   if (!VALID_CODES.hasOwnProperty(code)) {
     alert("Invalid unlock code.");
     punishment();
     return;
   }
 
-  // First time entering code → activate expiration
+  // First time → activate expiration
   if (VALID_CODES[code] === null) {
     setCodeTimer(code);
   }
 
-  // Check if code expired
+  // Expired?
   if (isCodeExpired(code)) {
     alert("This unlock code has expired. Request a new one.");
     punishment();
     return;
   }
 
-  // All good → unlock
+  // SUCCESS
   alert("Unlock successful! Redirecting...");
 
-  // One-time use: burn the code
+  // Burn code
   delete VALID_CODES[code];
 
   // Clear session
   localStorage.removeItem("secure_session");
   localStorage.removeItem("lockout_until");
 
-  window.location.href =
-    "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
+  window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
 }
 
-// Wrong attempts penalty
+// ------------------------------------------------
+// WRONG ATTEMPTS HANDLER
+// ------------------------------------------------
 function punishment() {
   if (attempts >= MAX_ATTEMPTS) {
     alert("Too many wrong attempts. Locked for 5 minutes.");
