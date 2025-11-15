@@ -1,0 +1,115 @@
+// -----------------------------------------------------
+// BACKEND: Admin manually enters unlock codes
+// -----------------------------------------------------
+
+const SHEET_NAME = "Users";
+
+// -----------------------------------------------------
+// Allow browser GET requests (required by GAS)
+// -----------------------------------------------------
+function doGet(e) {
+  return ContentService
+    .createTextOutput("Nursing Unlock System Backend Active")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+// -----------------------------------------------------
+// Main POST Handler
+// -----------------------------------------------------
+function doPost(e) {
+  const data = JSON.parse(e.postData.contents);
+  const action = data.action;
+
+  if (action === "register") return registerUser(data);
+  if (action === "checkUnlock") return checkUnlock(data);
+  if (action === "notifyAdmin") return notifyAdmin(data);
+
+  return response({ error: "Unknown action" });
+}
+
+// -----------------------------------------------------
+// 1. Register User (Admin will unlock later)
+// -----------------------------------------------------
+function registerUser(data) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+
+  const newRow = [
+    new Date(),      // Timestamp
+    data.name,       // Name
+    data.wa,         // WhatsApp
+    data.userId,     // User ID
+    "pending",       // Status
+    ""               // Unlock Code
+  ];
+
+  ss.appendRow(newRow);
+
+  return response({
+    success: true,
+    message: "Registered. Waiting admin approval."
+  });
+}
+
+// -----------------------------------------------------
+// 2. Check Unlock Status
+// -----------------------------------------------------
+function checkUnlock(data) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  const rows = ss.getDataRange().getValues();
+
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][3] === data.userId) {    // User ID column
+      const unlock = rows[i][5];         // Unlock Code column
+
+      if (unlock && unlock.trim() !== "") {
+        return response({
+          success: true,
+          unlockCode: unlock
+        });
+      } else {
+        return response({
+          success: false,
+          message: "Not unlocked yet."
+        });
+      }
+    }
+  }
+
+  return response({
+    success: false,
+    message: "User ID not found."
+  });
+}
+
+// -----------------------------------------------------
+// 3. Notify Admin via WhatsApp
+// -----------------------------------------------------
+function notifyAdmin(data) {
+  const adminNumber = "6285399652487";
+
+  const msg =
+    "🔔 NEW UNLOCK REQUEST\n" +
+    "Name: " + data.name + "\n" +
+    "WA: " + data.wa + "\n" +
+    "UserID: " + data.userId + "\n\n" +
+    "➡ Please open sheet and enter UNLOCK CODE.";
+
+  const url =
+    "https://wa.me/" +
+    adminNumber +
+    "?text=" +
+    encodeURIComponent(msg);
+
+  return response({
+    success: true,
+    link: url
+  });
+}
+
+// -----------------------------------------------------
+// Helper: JSON Response
+// -----------------------------------------------------
+function response(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
