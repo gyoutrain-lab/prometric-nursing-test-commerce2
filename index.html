@@ -69,6 +69,24 @@ body, html {
   transition: opacity 1s ease;
 }
 
+/* User input section */
+.user-info {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #000;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.user-info input {
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  width: calc(50% - 10px);
+}
+
 /* Social icons */
 .social-icons {
   margin-top: 15px;
@@ -131,19 +149,13 @@ input.unlock-code {
   border: 1px solid #ccc;
 }
 
-/* User info small section */
-.user-info {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  color: #000;
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .qr-container { width: 20%; }
   input.unlock-code { width: 100px; }
   .bottom-half h2 { font-size: 1.2rem; }
   .social-icons a img { width: 30px; height: 30px; }
+  .user-info input { width: 100%; }
 }
 </style>
 </head>
@@ -156,12 +168,10 @@ input.unlock-code {
   <h2>Check the QR Dana to put IDR 50k</h2>
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
-  <!-- User account section -->
+  <!-- User input for name and WA number -->
   <div class="user-info">
-    Name: <strong>John Doe</strong> | 
-    <a href="https://wa.me/6285399652487?text=Payment%20Confirmed%20from%20John%20Doe" target="_blank">
-      WA #: +62 853-9965-2487
-    </a>
+    <input type="text" id="userNameInput" placeholder="Enter your name" required>
+    <input type="text" id="userWAInput" placeholder="Enter your WA #" required>
   </div>
 
   <!-- Social icons -->
@@ -206,15 +216,23 @@ window.addEventListener('load',()=>{
 
 // Confirmation button workflow
 function confirmPayment() {
-  const userName = "John Doe"; // Replace with actual user name dynamically if needed
-  const userWA = "+6285399652487"; // User WA number
+  const userName = document.getElementById("userNameInput").value.trim();
+  const userWA = document.getElementById("userWAInput").value.trim();
+
+  if(!userName || !userWA){
+    alert("Please fill in your Name and WA # before confirming payment.");
+    return;
+  }
 
   alert("Click OK to notify the Admin to send the unlock code.");
 
-  // Send notification to Admin via WhatsApp link
-  window.open(`https://wa.me/6285399652487?text=Payment%20Confirmed%20from%20${encodeURIComponent(userName)}%20-%20WA%20#: ${encodeURIComponent(userWA)}`, "_blank");
+  // Open WhatsApp link to admin with user info
+  window.open(
+    `https://wa.me/6285399652487?text=Payment%20Confirmed%20from%20${encodeURIComponent(userName)}%20-%20WA%20#: ${encodeURIComponent(userWA)}`,
+    "_blank"
+  );
 
-  // Enable Continue button (optional: could wait until admin sends code)
+  // Enable Continue button after confirmation
   document.getElementById("continue-btn").disabled = false;
 }
 
@@ -223,9 +241,7 @@ function checkUnlockCode() {
   const code = document.getElementById("unlockCodeInput").value.trim();
   if(!code){ alert("Enter the unlock code first."); return; }
 
-  // Optional: validate code via Google Apps Script
   alert("Code entered: " + code + "\nAdmin should have sent this to you via WhatsApp.");
-  // Replace next line with actual redirection after validation
   window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
 }
 </script>
