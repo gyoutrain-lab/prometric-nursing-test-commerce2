@@ -205,11 +205,8 @@ window.addEventListener('load',()=>{
 });
 
 // ------------------------
-// Admin-controlled unlock code workflow (SECURE VERSION)
+// Admin-controlled unlock code workflow (SAFE VERSION)
 // ------------------------
-
-// Admin sets the unlock codes manually
-const ADMIN_UNLOCK_CODES = ["AB1234", "XY7788", "MK2025"]; 
 
 function confirmPayment() {
   const userName = document.getElementById("userNameInput").value.trim();
@@ -220,23 +217,30 @@ function confirmPayment() {
     return;
   }
 
-  // Tell the admin a new request came in (no auto code)
-  const adminMsg = 
-    `Payment Confirmed:\n` +
+  // NO RANDOM CODE GENERATED HERE ANYMORE.
+  // We only notify admin to review payment first.
+
+  alert("Admin will give you the unlock code after checking your payment.");
+
+  // Instead of sending a code, we tell admin user wants to unlock.
+  const adminMsg =
+    `PAYMENT REQUEST\n\n` +
     `Name: ${userName}\n` +
-    `WA #: ${userWA}\n` +
-    `User requesting unlock.\n` +
-    `Send unlock code manually.`;
+    `WA #: ${userWA}\n\n` +
+    `User requests unlock.\n` +
+    `Press 1 to send unlock code.\n` +
+    `Press 2 to mark Unlock in Progress.`;
 
   window.open(
     `https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,
     "_blank"
   );
 
-  alert("Admin notified. Wait for admin to send the unlock code.");
+  alert("Admin notified. Please wait for Admin to send your unlock code.");
+
+  // User cannot continue until code received manually from admin
   document.getElementById("continue-btn").disabled = false;
 }
-
 // Continue button validation (secure)
 function checkUnlockCode() {
   const codeInput = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
