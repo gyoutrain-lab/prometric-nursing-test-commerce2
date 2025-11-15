@@ -34,12 +34,12 @@ function registerUser(data) {
   const ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
 
   const newRow = [
-    new Date(),      // Timestamp
-    data.name,       // Name
-    data.wa,         // WhatsApp
-    data.userId,     // User ID
-    "pending",       // Status
-    ""               // Unlock Code
+    new Date(),     // Timestamp
+    data.name,      // Name
+    data.wa,        // WhatsApp
+    data.userId,    // User ID
+    "pending",      // Status
+    ""              // Unlock Code
   ];
 
   ss.appendRow(newRow);
@@ -58,8 +58,8 @@ function checkUnlock(data) {
   const rows = ss.getDataRange().getValues();
 
   for (let i = 1; i < rows.length; i++) {
-    if (rows[i][3] === data.userId) {    // User ID column
-      const unlock = rows[i][5];         // Unlock Code column
+    if (rows[i][3] === data.userId) {  // User ID column
+      const unlock = rows[i][5];       // Unlock Code column
 
       if (unlock && unlock.trim() !== "") {
         return response({
@@ -110,6 +110,7 @@ function notifyAdmin(data) {
 // Helper: JSON Response
 // -----------------------------------------------------
 function response(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }
