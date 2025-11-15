@@ -1,173 +1,155 @@
-// -----------------------------------------------------
-// SECURITY LEVEL 2 — ADVANCED FRONTEND PROTECTION
-// -----------------------------------------------------
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nursing Prometric Payment & Unlock</title>
 
-// ----------- ENCRYPTED SESSION TOKEN -----------
-function encryptSession(str) {
-  return btoa(unescape(encodeURIComponent(str)));
-}
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #eef5f5;
+    margin: 0;
+    padding: 20px;
+  }
+  .container {
+    max-width: 450px;
+    background: white;
+    margin: auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px #ccc;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: #009578;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #007e63;
+  }
+  .hidden { display: none; }
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 8px;
+    border: 1px solid #aaa;
+  }
+</style>
+</head>
 
-let sessionID = "SID-" + Math.random().toString(36).substring(2, 12).toUpperCase();
-let encryptedSession = encryptSession(sessionID);
+<body>
+<div class="container">
 
-// Prevent refresh bypass
-if (!localStorage.getItem("secure_session")) {
-  localStorage.setItem("secure_session", encryptedSession);
-} else {
-  encryptedSession = localStorage.getItem("secure_session");
-}
+  <h2>Secure Payment Verification</h2>
+  <p>Please enter your name and WhatsApp number to continue.</p>
 
-// ----------- UNLOCK SYSTEM CONTROL -----------
-let unlockAllowed = false;
-let attempts = 0;
-const MAX_ATTEMPTS = 3;
+  <label>Your Name:</label>
+  <input id="userName" />
 
-// Admin-managed One-Time Codes
-let VALID_CODES = {
-  "GY500A": null,
-  "GY500B": null,
-  "GY500C": null
-};
+  <label>Your WhatsApp Number (62…):</label>
+  <input id="userWA" />
 
-// Code expires in 10 minutes
-const EXPIRATION_MS = 10 * 60 * 1000;
+  <button onclick="startPayment()">Continue Test</button>
 
-function setCodeTimer(code) {
-  VALID_CODES[code] = Date.now() + EXPIRATION_MS;
-}
+  <div id="proofSection" class="hidden">
+    <hr>
+    <h3>Upload Payment Proof</h3>
+    <input type="file" id="proofFile" accept="image/*">
+    <button onclick="submitProof()">Share Proof</button>
+  </div>
 
-function isCodeExpired(code) {
-  if (!VALID_CODES[code]) return true;
-  return Date.now() > VALID_CODES[code];
-}
+  <div id="unlockSection" class="hidden">
+    <hr>
+    <h3>Enter Unlock Code</h3>
+    <input id="unlockInput" placeholder="Enter Unlock Code">
+    <button onclick="verifyUnlockCode()">Unlock</button>
+  </div>
 
-// ----------- LOCKOUT HANDLING -----------
-function lockedOut() {
-  const lockUntil = Date.now() + 5 * 60 * 1000; // 5 minutes
-  localStorage.setItem("lockout_until", lockUntil);
-}
+</div>
 
-function isLocked() {
-  const until = localStorage.getItem("lockout_until");
-  if (!until) return false;
-  return Date.now() < parseInt(until);
-}
+<script>
+// ------------------------------------------
+// GLOBAL VARIABLES
+// ------------------------------------------
+let generatedCode = "";
+let actualCode = "";
+let userName = "";
+let userWA = "";
 
-// ------------------------------------------------
-// PAYMENT CONFIRMATION → ADMIN NOTIFICATION
-// ------------------------------------------------
-function confirmPayment() {
-  const userName = document.getElementById("userNameInput").value.trim();
-  const userWA = document.getElementById("userWAInput").value.trim();
+// ------------------------------------------
+// STEP 1 - USER STARTS PAYMENT
+// ------------------------------------------
+function startPayment() {
+  userName = document.getElementById("userName").value.trim();
+  userWA = document.getElementById("userWA").value.trim();
 
   if (!userName || !userWA) {
-    alert("Please fill in your Name and WA # before confirming payment.");
+    alert("Please enter your name and WhatsApp number.");
     return;
   }
 
-  // Locked?
-  if (isLocked()) {
-    alert("Too many attempts. Try again later.");
+  // generate unlock code
+  generatedCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  actualCode = generatedCode;
+
+  document.getElementById("proofSection").classList.remove("hidden");
+
+  alert("Please upload your transfer proof to continue.");
+}
+
+// ------------------------------------------
+// STEP 2 - USER UPLOADS PROOF → SEND TO ADMIN
+// ------------------------------------------
+function submitProof() {
+  const file = document.getElementById("proofFile").files[0];
+  if (!file) {
+    alert("Please upload a screenshot or proof first.");
     return;
   }
 
-  alert(
-    "Admin will provide your unlock code.\nYou must send the payment proof first."
-  );
+  // User waiting message
+  alert("Unlock In Progress...\nAdmin is reviewing your payment. Please wait.");
 
-  const action = confirm(
-    "Press OK to send payment proof.\nPress CANCEL to stop."
-  );
-
-  if (!action) {
-    alert("Payment process canceled.");
-    return;
-  }
-
-  // WhatsApp Notification
+  // Send WA message to admin
   const adminMsg =
-    `NEW PAYMENT REQUEST\n\n` +
+    `Payment Proof Received:\n` +
     `Name: ${userName}\n` +
-    `WA #: ${userWA}\n` +
-    `Session: ${encryptedSession}\n\n` +
-    `Send UNLOCK CODE manually.\n` +
-    `Press 1 to approve (issue code)\nPress 2 to deny.`;
+    `WA: ${userWA}\n` +
+    `Unlock Code: ${generatedCode}\n\n` +
+    `Press 1 to SEND unlock code.\n` +
+    `Press 2 to mark UNLOCK IN PROGRESS.`;
 
   window.open(
     `https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,
     "_blank"
   );
 
-  alert("Admin notified. Please wait for admin to provide unlock code.");
-
-  unlockAllowed = true;
-  const btn = document.getElementById("continue-btn");
-  if (btn) btn.disabled = false;
+  // Now allow the user to enter unlock code after admin sends it
+  document.getElementById("unlockSection").classList.remove("hidden");
 }
 
-// ------------------------------------------------
-// VERIFY UNLOCK CODE
-// ------------------------------------------------
-function checkUnlockCode() {
-  if (!unlockAllowed) {
-    alert("You must send payment proof first.");
-    return;
-  }
+// ------------------------------------------
+// STEP 3 - VERIFY THE UNLOCK CODE
+// ------------------------------------------
+function verifyUnlockCode() {
+  const input = document.getElementById("unlockInput").value.trim();
 
-  if (isLocked()) {
-    alert("Too many attempts. Try again later.");
-    return;
-  }
-
-  const code = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
-
-  if (!code) {
-    alert("Enter the unlock code first.");
-    return;
-  }
-
-  attempts++;
-
-  // Not a valid code in dictionary
-  if (!VALID_CODES.hasOwnProperty(code)) {
-    alert("Invalid unlock code.");
-    punishment();
-    return;
-  }
-
-  // First time → activate expiration
-  if (VALID_CODES[code] === null) {
-    setCodeTimer(code);
-  }
-
-  // Expired?
-  if (isCodeExpired(code)) {
-    alert("This unlock code has expired. Request a new one.");
-    punishment();
-    return;
-  }
-
-  // SUCCESS
-  alert("Unlock successful! Redirecting...");
-
-  // Burn code
-  delete VALID_CODES[code];
-
-  // Clear session
-  localStorage.removeItem("secure_session");
-  localStorage.removeItem("lockout_until");
-
-  window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
-}
-
-// ------------------------------------------------
-// WRONG ATTEMPTS HANDLER
-// ------------------------------------------------
-function punishment() {
-  if (attempts >= MAX_ATTEMPTS) {
-    alert("Too many wrong attempts. Locked for 5 minutes.");
-    lockedOut();
+  if (input === actualCode) {
+    alert("Unlock successful! Redirecting to the test...");
+    window.location.href =
+      "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
   } else {
-    alert(`Wrong code. Attempts left: ${MAX_ATTEMPTS - attempts}`);
+    alert("Incorrect unlock code. Please try again.");
   }
 }
+</script>
+
+</body>
+</html>
