@@ -64,6 +64,7 @@ body, html {
   bottom: 20px;
   right: 20px;
   width: 25%;
+  max-width: 200px;
   z-index: 2;
   opacity: 1;
 }
@@ -150,7 +151,7 @@ input.unlock-code {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .qr-container { width: 40%; }
+  .qr-container { width: 50%; max-width: 250px; }
   input.unlock-code { width: 100px; }
   .bottom-half h2 { font-size: 1.2rem; }
   .social-icons a img { width: 30px; height: 30px; }
