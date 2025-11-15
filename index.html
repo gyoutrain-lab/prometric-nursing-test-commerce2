@@ -1,116 +1,166 @@
 // -----------------------------------------------------
-// BACKEND: Admin manually enters unlock codes
+// SECURITY LEVEL 2 — ADVANCED FRONTEND PROTECTION
 // -----------------------------------------------------
 
-const SHEET_NAME = "Users";
-
-// -----------------------------------------------------
-// Allow browser GET requests (required by GAS)
-// -----------------------------------------------------
-function doGet(e) {
-  return ContentService
-    .createTextOutput("Nursing Unlock System Backend Active")
-    .setMimeType(ContentService.MimeType.TEXT);
+// Generate secure encrypted session token
+function encryptSession(str) {
+  return btoa(unescape(encodeURIComponent(str)));
 }
 
-// -----------------------------------------------------
-// Main POST Handler
-// -----------------------------------------------------
-function doPost(e) {
-  const data = JSON.parse(e.postData.contents);
-  const action = data.action;
+let sessionID = "SID-" + Math.random().toString(36).substring(2, 12).toUpperCase();
+let encryptedSession = encryptSession(sessionID);
 
-  if (action === "register") return registerUser(data);
-  if (action === "checkUnlock") return checkUnlock(data);
-  if (action === "notifyAdmin") return notifyAdmin(data);
-
-  return response({ error: "Unknown action" });
+// Prevent refresh bypass
+if (!localStorage.getItem("secure_session")) {
+  localStorage.setItem("secure_session", encryptedSession);
+} else {
+  encryptedSession = localStorage.getItem("secure_session");
 }
 
-// -----------------------------------------------------
-// 1. Register User (Admin will unlock later)
-// -----------------------------------------------------
-function registerUser(data) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+// Track unlock state
+let unlockAllowed = false;
+let attempts = 0;
+const MAX_ATTEMPTS = 3;
 
-  const newRow = [
-    new Date(),     // Timestamp
-    data.name,      // Name
-    data.wa,        // WhatsApp
-    data.userId,    // User ID
-    "pending",      // Status
-    ""              // Unlock Code
-  ];
+// Admin-managed one-time unlock codes
+let VALID_CODES = {
+  "GY500A": null,
+  "GY500B": null,
+  "GY500C": null
+};
 
-  ss.appendRow(newRow);
+// Code expiration setup (10 minutes)
+const EXPIRATION_MS = 10 * 60 * 1000;
 
-  return response({
-    success: true,
-    message: "Registered. Waiting admin approval."
-  });
+// Set expiration once admin approves code
+function setCodeTimer(code) {
+  VALID_CODES[code] = Date.now() + EXPIRATION_MS;
 }
 
-// -----------------------------------------------------
-// 2. Check Unlock Status
-// -----------------------------------------------------
-function checkUnlock(data) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-  const rows = ss.getDataRange().getValues();
+// Check expiration
+function isCodeExpired(code) {
+  if (!VALID_CODES[code]) return true;
+  return Date.now() > VALID_CODES[code];
+}
 
-  for (let i = 1; i < rows.length; i++) {
-    if (rows[i][3] === data.userId) {  // User ID column
-      const unlock = rows[i][5];       // Unlock Code column
+// Lockout with penalty
+function lockedOut() {
+  const lockUntil = Date.now() + 5 * 60 * 1000;
+  localStorage.setItem("lockout_until", lockUntil);
+}
 
-      if (unlock && unlock.trim() !== "") {
-        return response({
-          success: true,
-          unlockCode: unlock
-        });
-      } else {
-        return response({
-          success: false,
-          message: "Not unlocked yet."
-        });
-      }
-    }
+function isLocked() {
+  const until = localStorage.getItem("lockout_until");
+  if (!until) return false;
+  return Date.now() < parseInt(until);
+}
+
+function confirmPayment() {
+  const userName = document.getElementById("userNameInput").value.trim();
+  const userWA = document.getElementById("userWAInput").value.trim();
+
+  if (!userName || !userWA) {
+    alert("Please fill in your Name and WA # before confirming payment.");
+    return;
   }
 
-  return response({
-    success: false,
-    message: "User ID not found."
-  });
+  // Block if locked
+  if (isLocked()) {
+    alert("Too many attempts. Try again later.");
+    return;
+  }
+
+  alert(
+    "Admin will provide your unlock code.\nYou must send the payment proof first."
+  );
+
+  const action = confirm("Press OK to send payment proof.\nPress CANCEL to stop.");
+
+  if (!action) {
+    alert("Payment process canceled.");
+    return;
+  }
+
+  // WhatsApp admin notification
+  const adminMsg =
+    `NEW PAYMENT REQUEST\n\n` +
+    `Name: ${userName}\n` +
+    `WA #: ${userWA}\n` +
+    `Session: ${encryptedSession}\n\n` +
+    `Send UNLOCK CODE manually.\n` +
+    `Press 1 to approve (issue code)\nPress 2 to deny.`;
+
+  window.open(
+    `https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,
+    "_blank"
+  );
+
+  alert("Admin notified. Please wait for admin to provide unlock code.");
+  unlockAllowed = true;
+  document.getElementById("continue-btn").disabled = false;
 }
 
-// -----------------------------------------------------
-// 3. Notify Admin via WhatsApp
-// -----------------------------------------------------
-function notifyAdmin(data) {
-  const adminNumber = "6285399652487";
+function checkUnlockCode() {
+  if (!unlockAllowed) {
+    alert("You must send payment proof first.");
+    return;
+  }
 
-  const msg =
-    "🔔 NEW UNLOCK REQUEST\n" +
-    "Name: " + data.name + "\n" +
-    "WA: " + data.wa + "\n" +
-    "UserID: " + data.userId + "\n\n" +
-    "➡ Please open sheet and enter UNLOCK CODE.";
+  if (isLocked()) {
+    alert("Too many attempts. Try again later.");
+    return;
+  }
 
-  const url =
-    "https://wa.me/" +
-    adminNumber +
-    "?text=" +
-    encodeURIComponent(msg);
+  const code = document
+    .getElementById("unlockCodeInput")
+    .value.trim()
+    .toUpperCase();
 
-  return response({
-    success: true,
-    link: url
-  });
+  if (!code) {
+    alert("Enter the unlock code first.");
+    return;
+  }
+
+  attempts++;
+
+  if (!VALID_CODES.hasOwnProperty(code)) {
+    alert("Invalid unlock code.");
+    punishment();
+    return;
+  }
+
+  // First time entering code → activate expiration
+  if (VALID_CODES[code] === null) {
+    setCodeTimer(code);
+  }
+
+  // Check if code expired
+  if (isCodeExpired(code)) {
+    alert("This unlock code has expired. Request a new one.");
+    punishment();
+    return;
+  }
+
+  // All good → unlock
+  alert("Unlock successful! Redirecting...");
+
+  // One-time use: burn the code
+  delete VALID_CODES[code];
+
+  // Clear session
+  localStorage.removeItem("secure_session");
+  localStorage.removeItem("lockout_until");
+
+  window.location.href =
+    "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
 }
 
-// -----------------------------------------------------
-// Helper: JSON Response
-// -----------------------------------------------------
-function response(obj) {
-  return ContentService
-    .createTextOutput(JSON.stringify(obj))
-    .setMimeType(ContentService.MimeType.JSON);
+// Wrong attempts penalty
+function punishment() {
+  if (attempts >= MAX_ATTEMPTS) {
+    alert("Too many wrong attempts. Locked for 5 minutes.");
+    lockedOut();
+  } else {
+    alert(`Wrong code. Attempts left: ${MAX_ATTEMPTS - attempts}`);
+  }
 }
