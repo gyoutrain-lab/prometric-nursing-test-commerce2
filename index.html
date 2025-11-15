@@ -233,7 +233,8 @@ Options:
   document.getElementById("continue-btn").disabled = true;
 
   // Check Google Sheet for approval every 3 seconds until approved
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbx1234567890abcdefGHIJKLMNOP"; // replace with your deployed GAS URL
+  const GAS_URL = "const GAS_URL = "https://script.google.com/macros/s/AKfycbx1234567890abcdefGHIJKLMNOP/exec";
+"; // replace with your deployed GAS URL
   const intervalId = setInterval(() => {
     fetch(GAS_URL, {
       method: "POST",
