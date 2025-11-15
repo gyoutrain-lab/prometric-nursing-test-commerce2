@@ -30,7 +30,7 @@ body, html {
   padding: 20px;
   box-sizing: border-box;
   overflow: hidden;
-  background: #eef5f5; /* neutral background to show flowing image */
+  background: #eef5f5; /* neutral to show flowing image */
 }
 
 /* Flowing image as water effect */
@@ -40,7 +40,7 @@ body, html {
   width: 200%;
   height: 200%;
   background: url('assets/icon17%20(1).jpg') repeat;
-  opacity: 0.2; /* transparent */
+  opacity: 0.2; /* transparent effect */
   background-size: cover;
   animation: flow 15s linear infinite;
   pointer-events: none;
@@ -71,22 +71,20 @@ body, html {
 
 .contacts {
   margin-top: 10px;
-  font-size: 0.8rem;
-  color: #000;
   z-index: 2;
   position: relative;
 }
 
-.contacts img {
-  width: 25px;
+.contacts a img {
+  width: 35px;
+  margin-right: 10px;
   vertical-align: middle;
-  margin-right: 5px;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.contacts a {
-  color: #000;
-  text-decoration: none;
-  margin-right: 10px;
+.contacts a img:hover {
+  transform: scale(1.2);
 }
 
 .buttons {
@@ -136,6 +134,7 @@ input.unlock-code {
   .qr-container { width: 20%; }
   input.unlock-code { width: 100px; }
   .bottom-half h2 { font-size: 1.2rem; }
+  .contacts a img { width: 30px; margin-right: 8px; }
 }
 </style>
 </head>
@@ -149,12 +148,18 @@ input.unlock-code {
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
   <div class="contacts">
-    <a href="https://wa.me/6285399652487" target="_blank">
-      <img src="assets/whatsapp.svg" alt="WA Icon"> +62 853-9965-2487
+    <a href="https://wa.me/6285399652487" target="_blank" title="WhatsApp">
+      <img src="assets/whatsapp.svg" alt="WA Icon">
     </a>
-    <span>Email: gyoutrain@gmail.com</span> | 
-    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank">Instagram</a> | 
-    <a href="https://t.me/etkyogyakarta" target="_blank">Telegram</a>
+    <a href="mailto:gyoutrain@gmail.com" target="_blank" title="Email">
+      <img src="assets/email.svg" alt="Email Icon">
+    </a>
+    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank" title="Instagram">
+      <img src="assets/instagram.svg" alt="Instagram Icon">
+    </a>
+    <a href="https://t.me/etkyogyakarta" target="_blank" title="Telegram">
+      <img src="assets/telegram.svg" alt="Telegram Icon">
+    </a>
   </div>
 
   <div class="buttons">
@@ -172,6 +177,7 @@ function lazyLoadImage(img) {
   const src = img.getAttribute('data-src');
   if(src){ img.src = src; img.style.opacity=1; img.removeAttribute('data-src'); }
 }
+
 window.addEventListener('load',()=>{
   const top = document.getElementById('topHalf');
   const qr = document.getElementById('danaQR');
