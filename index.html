@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nursing Prometric Test - Landing</title>
+<style>
+  body, html {
+    margin: 0; padding: 0;
+    font-family: Arial, sans-serif;
+    height: 100%;
+    overflow-x: hidden;
+    background: #eef5f5;
+  }
+
+  .top-half {
+    width: 100%;
+    height: 50vh;
+    background: url('https://raw.githubusercontent.com/gyoutrain-lab/prometric-nursing-test-commerce2/main/icon17%20(1).jpg') center/contain no-repeat;
+  }
+
+  .bottom-half {
+    width: 100%;
+    height: 50vh;
+    position: relative;
+    background: #007bff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Flowing water animation */
+  .water-flow {
+    position: absolute;
+    top: 0; left: 0;
+    width: 200%;
+    height: 200%;
+    background: rgba(255,255,255,0.2);
+    border-radius: 40%;
+    animation: flow 10s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes flow {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .bottom-half h2 {
+    color: #fff;
+    font-size: 1.5rem;
+    margin: 0 0 10px 0;
+    z-index: 2;
+    position: relative;
+  }
+
+  .qr-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 10%;
+    z-index: 2;
+  }
+
+  .contacts {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: #fff;
+    z-index: 2;
+    position: relative;
+  }
+
+  .contacts img {
+    width: 25px;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+
+  .contacts a {
+    color: #fff;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+
+  .buttons {
+    margin-top: 15px;
+    z-index: 2;
+    position: relative;
+  }
+
+  button {
+    padding: 10px 20px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.3s;
+  }
+
+  #continue-btn {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  #continue-btn:hover {
+    background-color: #218838;
+  }
+
+  #confirm-btn {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  #confirm-btn:hover {
+    background-color: #0056b3;
+  }
+
+  input.unlock-code {
+    padding: 5px;
+    width: 150px;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .qr-container { width: 20%; }
+    input.unlock-code { width: 100px; }
+    .bottom-half h2 { font-size: 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-half"></div>
+
+<div class="bottom-half">
+  <div class="water-flow"></div>
+  <h2>Check the QR Dana to put IDR 50k</h2>
+  <img src="https://raw.githubusercontent.com/gyoutrain-lab/prometric-nursing-test-commerce2/main/dana_qr.png" class="qr-container" alt="Dana QR">
+
+  <div class="contacts">
+    <a href="https://wa.me/6285399652487" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA Icon"> +62 853-9965-2487
+    </a>
+    <span>Email: gyoutrain@gmail.com</span> | 
+    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank">Instagram</a> | 
+    <a href="https://t.me/etkyogyakarta" target="_blank">Telegram</a>
+  </div>
+
+  <div class="buttons">
+    <button id="confirm-btn" onclick="alert('Please send a message via one of the above social media to confirm payment.')">Confirmation</button>
+    <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code">
+    <button id="continue-btn" onclick="checkUnlockCode()">Continue the Test</button>
+  </div>
+</div>
+
+<script>
+  // Google Apps Script Web App URL
+  const API_URL = "PASTE_YOUR_GOOGLE_SCRIPT_WEB_APP_URL_HERE";
+
+  async function checkUnlockCode() {
+    const input = document.getElementById('unlockCodeInput').value.trim();
+    if(!input) { alert("Please enter the unlock code."); return; }
+
+    try {
+      const response = await fetch(`${API_URL}?code=${encodeURIComponent(input)}`);
+      const data = await response.json();
+
+      if(data.status === "ok") {
+        window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
+      } else {
+        alert("Invalid or already used code. Please confirm payment via WhatsApp first.");
+      }
+    } catch(err) {
+      alert("Error connecting to server. Try again later.");
+      console.error(err);
+    }
+  }
+</script>
+
+</body>
+</html>
