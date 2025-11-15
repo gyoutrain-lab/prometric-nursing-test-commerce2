@@ -59,19 +59,13 @@ body, html {
   position: relative;
 }
 
-/* QR Dana styles */
 .qr-container {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 40%; /* bigger for easier scanning */
-  max-width: 250px;
+  width: 20%;
   z-index: 2;
-  opacity: 0; /* hidden initially */
-  transition: opacity 1s ease;
-  border: 5px solid #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  opacity: 1;
 }
 
 /* User input section */
@@ -156,7 +150,7 @@ input.unlock-code {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .qr-container { width: 60%; max-width: 200px; }
+  .qr-container { width: 40%; }
   input.unlock-code { width: 100px; }
   .bottom-half h2 { font-size: 1.2rem; }
   .social-icons a img { width: 30px; height: 30px; }
@@ -166,12 +160,12 @@ input.unlock-code {
 </head>
 <body>
 
-<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg"></div>
+<div class="top-half" id="topHalf"></div>
 
 <div class="bottom-half">
   <div class="water-flow"></div>
   <h2>Check the QR Dana to put IDR 50k</h2>
-  <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
+  <img id="danaQR" class="qr-container" src="assets/dana_qr.png" alt="Dana QR">
 
   <!-- User input for name and WA number -->
   <div class="user-info">
@@ -190,72 +184,50 @@ input.unlock-code {
 
   <div class="buttons">
     <button id="confirm-btn" onclick="confirmPayment()">Confirmation</button>
-    <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code" disabled>
+    <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code">
     <button id="continue-btn" onclick="checkUnlockCode()" disabled>Continue the Test</button>
   </div>
 </div>
 
 <script>
-// Lazy-load images
-function lazyLoadImage(img) {
-  const src = img.getAttribute('data-src');
-  if(src){ img.src = src; img.style.opacity=1; img.removeAttribute('data-src'); }
+// Generate random unlock code
+function generateUnlockCode(){
+  return Math.random().toString(36).substring(2,8).toUpperCase();
 }
 
-window.addEventListener('load',()=>{
-  const top = document.getElementById('topHalf');
-  const qr = document.getElementById('danaQR');
-  top.style.backgroundImage = `url('${top.getAttribute('data-src')}')`;
-  lazyLoadImage(qr);
-});
-
-// ------------------------
-// Confirmation button workflow using WhatsApp only
-// ------------------------
+// Confirmation button workflow
 function confirmPayment() {
   const userName = document.getElementById("userNameInput").value.trim();
   const userWA = document.getElementById("userWAInput").value.trim();
-
   if(!userName || !userWA){
     alert("Please fill in your Name and WA # before confirming payment.");
     return;
   }
 
-  const proceed = confirm("Click OK to notify the Admin to send the unlock code.\n\nAdmin will reply manually via WhatsApp:\n1. Send Unlock Code\n2. Unlock In Progress");
-  if(!proceed) return;
+  const unlockCode = generateUnlockCode();
+  document.getElementById("unlockCodeInput").value = unlockCode;
+  document.getElementById("continue-btn").disabled = true;
 
-  // Open WhatsApp chat to Admin
-  const adminNumber = "6285399652487"; // Your WA Business number
-  const message = `Payment Confirmed from ${userName} - WA #: ${userWA}\n\nPlease respond:\n1. Send Unlock Code\n2. Unlock in Progress`;
-  window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(message)}`, "_blank");
+  alert("Click OK to notify Admin for Payment Confirmation.\nAdmin will approve your unlock code.");
 
-  // Show the QR Dana for scanning after confirmation
-  const qr = document.getElementById("danaQR");
-  qr.style.opacity = 1; 
-  qr.style.transition = "opacity 1s ease";
+  // Notify Admin manually via WhatsApp
+  const adminMessage = `Payment Confirmed:\nName: ${userName}\nWA #: ${userWA}\nUnlock Code: ${unlockCode}\nPlease press 1 to send, 2 to mark in progress.`;
+  window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMessage)}`, "_blank");
 
-  // Enable unlock code input
-  document.getElementById("unlockCodeInput").disabled = false;
+  alert("Admin notified. Wait for unlock code approval.");
 }
 
-// ------------------------
-// Continue button - user enters unlock code manually sent by admin
-// ------------------------
-function checkUnlockCode() {
+// Continue button - user enters unlock code manually after admin approval
+function checkUnlockCode(){
   const code = document.getElementById("unlockCodeInput").value.trim();
-  if(!code){ 
-    alert("Enter the unlock code first."); 
-    return; 
-  }
+  if(!code){ alert("Enter the unlock code first."); return; }
 
-  // Example: hardcoded unlock codes (admin sends manually)
-  const validCodes = ["ABC123","XYZ789"]; 
-
-  if(validCodes.includes(code)){
-    alert("Unlock code valid! Redirecting to the test...");
+  const proceed = confirm("Have you received admin approval for this unlock code?\nClick OK to continue.");
+  if(proceed){
+    alert("Unlock code approved! Redirecting to the test...");
     window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
   } else {
-    alert("Invalid unlock code. Please check with admin.");
+    alert("Wait for admin approval before continuing.");
   }
 }
 </script>
