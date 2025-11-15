@@ -169,16 +169,15 @@ input.unlock-code {
   </div>
 
   <div class="buttons">
-    <button id="confirm-btn" onclick="alert('Please send a message via one of the above social media to confirm payment.')">Confirmation</button>
+    <button id="confirm-btn" onclick="confirmPayment()">Confirmation</button>
     <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code">
-    <button id="continue-btn" onclick="checkUnlockCode()">Continue the Test</button>
+    <button id="continue-btn" onclick="checkUnlockCode()" disabled>Continue the Test</button>
   </div>
-
-  <div class="dashboard-background"></div>
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzSBYN-JCju_OHLsrQ5dkVsZv7rg9aaZdnv-6oN5rU4WjqJUo5RnWFjb5U7enkKopaa/exec";
+const API_URL = "Phttps://script.google.com/macros/s/AKfycby1Z_nhu2HqvUbFzheSqJdCNhCM81SkBuyaHl0T-V1Kk1Hse4H1Lfz1WodegrSc0NuK/exec";
+const USER_ID = "USER_UNIQUE_ID"; // Replace with actual unique user ID
 
 // Lazy-load images
 function lazyLoadImage(img) {
@@ -193,16 +192,44 @@ window.addEventListener('load',()=>{
   lazyLoadImage(qr);
 });
 
-// Unlock code check
-async function checkUnlockCode(){
-  const input = document.getElementById('unlockCodeInput').value.trim();
-  if(!input){ alert("Please enter the unlock code."); return; }
-  try{
-    const res = await fetch(`${API_URL}?code=${encodeURIComponent(input)}`);
-    const data = await res.json();
-    if(data.status==="ok"){ window.location.href="https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/"; }
-    else{ alert("Invalid or already used code. Please confirm payment via WhatsApp first."); }
-  }catch(err){ alert("Error connecting to server. Try again later."); console.error(err); }
+// Step 1: User clicks Confirmation
+async function confirmPayment() {
+  alert("Please press 1 to confirm your payment.\nWhen you click OK, a message will be sent to the admin.");
+
+  try {
+    const response = await fetch(`${API_URL}?action=confirm_payment&user_id=${encodeURIComponent(USER_ID)}`);
+    const data = await response.json();
+
+    if(data.status === "ok") {
+      alert("Payment confirmed. Unlock code has been generated and sent to your WhatsApp / saved in the sheet.");
+      document.getElementById("continue-btn").disabled = false;
+    } else {
+      alert("Failed to send confirmation. Please try again.");
+    }
+  } catch(err) {
+    console.error(err);
+    alert("Error connecting to server. Try again later.");
+  }
+}
+
+// Step 2: Check Unlock Code
+async function checkUnlockCode() {
+  const code = document.getElementById("unlockCodeInput").value.trim();
+  if(!code){ alert("Enter the unlock code first."); return; }
+
+  try {
+    const response = await fetch(`${API_URL}?action=check_code&code=${encodeURIComponent(code)}&user_id=${encodeURIComponent(USER_ID)}`);
+    const data = await response.json();
+
+    if(data.status==="ok") {
+      window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
+    } else {
+      alert("Invalid unlock code. Please confirm payment first.");
+    }
+  } catch(err) {
+    console.error(err);
+    alert("Error connecting to server.");
+  }
 }
 </script>
 
