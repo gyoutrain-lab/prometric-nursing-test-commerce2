@@ -12,11 +12,13 @@ body, html {
   overflow-x: hidden;
   background: #eef5f5;
 }
+
 .top-half {
   width: 100%;
   height: 50vh;
   background: url('assets/icon17%20(1).jpg') center/cover no-repeat;
 }
+
 .bottom-half {
   width: 100%;
   height: 50vh;
@@ -30,6 +32,8 @@ body, html {
   overflow: hidden;
   background: #eef5f5;
 }
+
+/* Flowing image as water effect */
 .water-flow {
   position: absolute;
   top: 0; left: 0;
@@ -41,10 +45,12 @@ body, html {
   animation: flow 15s linear infinite;
   pointer-events: none;
 }
+
 @keyframes flow {
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
+
 .bottom-half h2 {
   color: #000;
   font-size: 1.5rem;
@@ -52,6 +58,7 @@ body, html {
   z-index: 2;
   position: relative;
 }
+
 .qr-container {
   position: absolute;
   bottom: 20px;
@@ -61,6 +68,8 @@ body, html {
   opacity: 0;
   transition: opacity 1s ease;
 }
+
+/* User input section */
 .user-info {
   margin-top: 10px;
   font-size: 0.9rem;
@@ -69,6 +78,7 @@ body, html {
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .user-info input {
   padding: 5px 10px;
   border-radius: 5px;
@@ -76,6 +86,8 @@ body, html {
   font-size: 0.9rem;
   width: calc(50% - 10px);
 }
+
+/* Social icons */
 .social-icons {
   margin-top: 15px;
   display: flex;
@@ -83,20 +95,24 @@ body, html {
   z-index: 2;
   position: relative;
 }
+
 .social-icons a img {
   width: 40px;
   height: 40px;
   cursor: pointer;
   transition: transform 0.3s;
 }
+
 .social-icons a img:hover {
   transform: scale(1.2);
 }
+
 .buttons {
   margin-top: 15px;
   z-index: 2;
   position: relative;
 }
+
 button {
   padding: 10px 20px;
   margin-right: 10px;
@@ -106,16 +122,25 @@ button {
   font-size: 1rem;
   transition: 0.3s;
 }
+
 #continue-btn {
   background-color: #28a745;
   color: #fff;
 }
-#continue-btn:hover { background-color: #218838; }
+
+#continue-btn:hover {
+  background-color: #218838;
+}
+
 #confirm-btn {
   background-color: #007bff;
   color: #fff;
 }
-#confirm-btn:hover { background-color: #0056b3; }
+
+#confirm-btn:hover {
+  background-color: #0056b3;
+}
+
 input.unlock-code {
   padding: 5px;
   width: 150px;
@@ -123,6 +148,8 @@ input.unlock-code {
   border-radius: 5px;
   border: 1px solid #ccc;
 }
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .qr-container { width: 20%; }
   input.unlock-code { width: 100px; }
@@ -169,6 +196,7 @@ function lazyLoadImage(img) {
   const src = img.getAttribute('data-src');
   if(src){ img.src = src; img.style.opacity=1; img.removeAttribute('data-src'); }
 }
+
 window.addEventListener('load',()=>{
   const top = document.getElementById('topHalf');
   const qr = document.getElementById('danaQR');
@@ -177,12 +205,13 @@ window.addEventListener('load',()=>{
 });
 
 // ------------------------
-// Confirmation button workflow
+// Apps Script Web App URL
 // ------------------------
-const API_URL = "https://script.google.com/macros/s/AKfycbx1azQ-Yeg86-nVKrE_Ytn4k-VpnkmDeqXogjFs5PN-FDACjOUcMwfRGB575_3fym6z/exec"; // <-- MUST replace
+const API_URL = "https://script.google.com/macros/s/AKfycbzlcSYvAzLEvSP3d2vcib_ivo8428Ohlbp1BXaCtcvhAtQmgjjfqI0wD2vGNz0akBzV/exec"; // Replace with your Web App URL
 let currentUserId = null;
 
-async function confirmPayment() {
+// Confirmation workflow
+async function confirmPayment(){
   const userName = document.getElementById("userNameInput").value.trim();
   const userWA = document.getElementById("userWAInput").value.trim();
 
@@ -198,38 +227,40 @@ async function confirmPayment() {
     const res = await fetch(API_URL, {
       method: "POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({name: userName, wa: userWA})
+      body: JSON.stringify({name:userName, wa:userWA})
     });
     const data = await res.json();
-    if(data.status==="ok"){
+
+    if(data.status === "ok"){
       currentUserId = data.userId;
       alert("Admin notified. Wait for unlock code via WhatsApp.");
       document.getElementById("continue-btn").disabled = false;
     } else {
-      alert("Error sending data to server.");
+      alert("Error: "+data.message);
     }
-  } catch(err) {
+
+  } catch(err){
     console.error(err);
     alert("Unable to connect to server. Try again later.");
   }
 }
 
-// ------------------------
-// Continue button - validate unlock code
-// ------------------------
-async function checkUnlockCode() {
+// Continue workflow
+async function checkUnlockCode(){
   const code = document.getElementById("unlockCodeInput").value.trim();
   if(!code){ alert("Enter the unlock code first."); return; }
 
   try {
     const res = await fetch(`${API_URL}?userId=${currentUserId}&code=${encodeURIComponent(code)}`);
     const data = await res.json();
-    if(data.status==="ok"){
+
+    if(data.status === "ok"){
       alert("Unlock code valid! Redirecting to the test...");
       window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
     } else {
-      alert("Invalid unlock code. Please check with admin.");
+      alert("Invalid unlock code. Check with admin. "+data.message);
     }
+
   } catch(err){
     console.error(err);
     alert("Error connecting to server. Try again later.");
