@@ -205,11 +205,12 @@ window.addEventListener('load',()=>{
 });
 
 // ------------------------
-// Confirmation button workflow
+// Landing page API integration
 // ------------------------
-const API_URL = "https://script.google.com/macros/s/AKfycbyxE0c7VI8Qfaatg6d9Mmt5lZDZFtegtlBRHQBwKLlwyum2zubp2pyOJHBb-Fwjmc8r/exec"; // Replace with your deployed Apps Script Web App URL
+const API_URL = "https://script.google.com/macros/s/AKfycbxxxxxxxxxxxxxxx/exec"; // <-- Replace with your Apps Script Web App URL
 let currentUserId = null;
 
+// Confirmation button workflow
 async function confirmPayment() {
   const userName = document.getElementById("userNameInput").value.trim();
   const userWA = document.getElementById("userWAInput").value.trim();
@@ -234,7 +235,7 @@ async function confirmPayment() {
       alert("Admin notified. Wait for unlock code via WhatsApp.");
       document.getElementById("continue-btn").disabled = false;
     } else {
-      alert("Error sending data to server.");
+      alert("Error sending data to server: " + data.message);
     }
   } catch(err) {
     console.error(err);
@@ -242,9 +243,7 @@ async function confirmPayment() {
   }
 }
 
-// ------------------------
 // Continue button - validate unlock code
-// ------------------------
 async function checkUnlockCode() {
   const code = document.getElementById("unlockCodeInput").value.trim();
   if(!code){ alert("Enter the unlock code first."); return; }
