@@ -5,25 +5,138 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nursing Prometric Test - Landing</title>
 <style>
-body, html{margin:0;padding:0;font-family:Arial,sans-serif;height:100%;overflow-x:hidden;background:#eef5f5}
-.top-half{width:100%;height:50vh;background:center/contain no-repeat;opacity:0;transition:opacity 1s ease}
-.bottom-half{width:100%;height:50vh;position:relative;background:#007bff;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:20px;box-sizing:border-box;overflow:hidden}
-.water-flow{position:absolute;top:0;left:0;width:200%;height:200%;background:rgba(255,255,255,0.2);border-radius:40%;animation:flow 10s linear infinite;pointer-events:none}
-@keyframes flow{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
-.bottom-half h2{color:#fff;font-size:1.5rem;margin:0 0 10px 0;z-index:2;position:relative}
-.qr-container{position:absolute;bottom:20px;right:20px;width:10%;z-index:2;opacity:0;transition:opacity 1s ease}
-.contacts{margin-top:10px;font-size:.8rem;color:#fff;z-index:2;position:relative}
-.contacts img{width:25px;vertical-align:middle;margin-right:5px}
-.contacts a{color:#fff;text-decoration:none;margin-right:10px}
-.buttons{margin-top:15px;z-index:2;position:relative}
-button{padding:10px 20px;margin-right:10px;border:none;border-radius:8px;cursor:pointer;font-size:1rem;transition:.3s}
-#continue-btn{background-color:#28a745;color:#fff}
-#continue-btn:hover{background-color:#218838}
-#confirm-btn{background-color:#007bff;color:#fff}
-#confirm-btn:hover{background-color:#0056b3}
-input.unlock-code{padding:5px;width:150px;margin-right:10px;border-radius:5px;border:1px solid #ccc}
-/* Responsive */
-@media(max-width:768px){.qr-container{width:20%}.bottom-half h2{font-size:1.2rem}input.unlock-code{width:100px}}
+body, html {
+  margin: 0; padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100%;
+  overflow-x: hidden;
+  background: #eef5f5;
+}
+
+.top-half {
+  width: 100%;
+  height: 50vh;
+  background: url('assets/icon17%20(1).jpg') center/cover no-repeat;
+}
+
+.bottom-half {
+  width: 100%;
+  height: 50vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #eef5f5; /* neutral background to show flowing image */
+}
+
+/* Flowing image as water effect */
+.water-flow {
+  position: absolute;
+  top: 0; left: 0;
+  width: 200%;
+  height: 200%;
+  background: url('assets/icon17%20(1).jpg') repeat;
+  opacity: 0.2; /* transparent */
+  background-size: cover;
+  animation: flow 15s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes flow {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.bottom-half h2 {
+  color: #000;
+  font-size: 1.5rem;
+  margin: 0 0 10px 0;
+  z-index: 2;
+  position: relative;
+}
+
+.qr-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 10%;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.contacts {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #000;
+  z-index: 2;
+  position: relative;
+}
+
+.contacts img {
+  width: 25px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.contacts a {
+  color: #000;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.buttons {
+  margin-top: 15px;
+  z-index: 2;
+  position: relative;
+}
+
+button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+#continue-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+#continue-btn:hover {
+  background-color: #218838;
+}
+
+#confirm-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+#confirm-btn:hover {
+  background-color: #0056b3;
+}
+
+input.unlock-code {
+  padding: 5px;
+  width: 150px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .qr-container { width: 20%; }
+  input.unlock-code { width: 100px; }
+  .bottom-half h2 { font-size: 1.2rem; }
+}
 </style>
 </head>
 <body>
@@ -63,7 +176,6 @@ window.addEventListener('load',()=>{
   const top = document.getElementById('topHalf');
   const qr = document.getElementById('danaQR');
   top.style.backgroundImage = `url('${top.getAttribute('data-src')}')`;
-  top.style.opacity = 1;
   lazyLoadImage(qr);
 });
 
