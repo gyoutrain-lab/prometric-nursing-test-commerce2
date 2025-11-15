@@ -59,14 +59,19 @@ body, html {
   position: relative;
 }
 
+/* QR Dana styles */
 .qr-container {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  width: 10%;
+  width: 40%; /* bigger for easier scanning */
+  max-width: 250px;
   z-index: 2;
-  opacity: 0;
+  opacity: 0; /* hidden initially */
   transition: opacity 1s ease;
+  border: 5px solid #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
 }
 
 /* User input section */
@@ -151,7 +156,7 @@ input.unlock-code {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .qr-container { width: 20%; }
+  .qr-container { width: 60%; max-width: 200px; }
   input.unlock-code { width: 100px; }
   .bottom-half h2 { font-size: 1.2rem; }
   .social-icons a img { width: 30px; height: 30px; }
@@ -185,7 +190,7 @@ input.unlock-code {
 
   <div class="buttons">
     <button id="confirm-btn" onclick="confirmPayment()">Confirmation</button>
-    <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code">
+    <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code" disabled>
     <button id="continue-btn" onclick="checkUnlockCode()" disabled>Continue the Test</button>
   </div>
 </div>
@@ -205,13 +210,9 @@ window.addEventListener('load',()=>{
 });
 
 // ------------------------
-// Apps Script Web App URL
+// Confirmation button workflow using WhatsApp only
 // ------------------------
-const API_URL = "https://script.google.com/macros/s/AKfycbzlcSYvAzLEvSP3d2vcib_ivo8428Ohlbp1BXaCtcvhAtQmgjjfqI0wD2vGNz0akBzV/exec"; // Replace with your Web App URL
-let currentUserId = null;
-
-// Confirmation workflow
-async function confirmPayment(){
+function confirmPayment() {
   const userName = document.getElementById("userNameInput").value.trim();
   const userWA = document.getElementById("userWAInput").value.trim();
 
@@ -220,50 +221,41 @@ async function confirmPayment(){
     return;
   }
 
-  const proceed = confirm("Click OK to notify the Admin to send the unlock code.");
+  const proceed = confirm("Click OK to notify the Admin to send the unlock code.\n\nAdmin will reply manually via WhatsApp:\n1. Send Unlock Code\n2. Unlock In Progress");
   if(!proceed) return;
 
-  try {
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({name:userName, wa:userWA})
-    });
-    const data = await res.json();
+  // Open WhatsApp chat to Admin
+  const adminNumber = "6285399652487"; // Your WA Business number
+  const message = `Payment Confirmed from ${userName} - WA #: ${userWA}\n\nPlease respond:\n1. Send Unlock Code\n2. Unlock in Progress`;
+  window.open(`https://wa.me/${adminNumber}?text=${encodeURIComponent(message)}`, "_blank");
 
-    if(data.status === "ok"){
-      currentUserId = data.userId;
-      alert("Admin notified. Wait for unlock code via WhatsApp.");
-      document.getElementById("continue-btn").disabled = false;
-    } else {
-      alert("Error: "+data.message);
-    }
+  // Show the QR Dana for scanning after confirmation
+  const qr = document.getElementById("danaQR");
+  qr.style.opacity = 1; 
+  qr.style.transition = "opacity 1s ease";
 
-  } catch(err){
-    console.error(err);
-    alert("Unable to connect to server. Try again later.");
-  }
+  // Enable unlock code input
+  document.getElementById("unlockCodeInput").disabled = false;
 }
 
-// Continue workflow
-async function checkUnlockCode(){
+// ------------------------
+// Continue button - user enters unlock code manually sent by admin
+// ------------------------
+function checkUnlockCode() {
   const code = document.getElementById("unlockCodeInput").value.trim();
-  if(!code){ alert("Enter the unlock code first."); return; }
+  if(!code){ 
+    alert("Enter the unlock code first."); 
+    return; 
+  }
 
-  try {
-    const res = await fetch(`${API_URL}?userId=${currentUserId}&code=${encodeURIComponent(code)}`);
-    const data = await res.json();
+  // Example: hardcoded unlock codes (admin sends manually)
+  const validCodes = ["ABC123","XYZ789"]; 
 
-    if(data.status === "ok"){
-      alert("Unlock code valid! Redirecting to the test...");
-      window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
-    } else {
-      alert("Invalid unlock code. Check with admin. "+data.message);
-    }
-
-  } catch(err){
-    console.error(err);
-    alert("Error connecting to server. Try again later.");
+  if(validCodes.includes(code)){
+    alert("Unlock code valid! Redirecting to the test...");
+    window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
+  } else {
+    alert("Invalid unlock code. Please check with admin.");
   }
 }
 </script>
