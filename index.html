@@ -1,155 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nursing Prometric Payment & Unlock</title>
-
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #eef5f5;
-    margin: 0;
-    padding: 20px;
-  }
-  .container {
-    max-width: 450px;
-    background: white;
-    margin: auto;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 0 10px #ccc;
-  }
-  button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background: #009578;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  button:hover {
-    background: #007e63;
-  }
-  .hidden { display: none; }
-  input, select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 8px;
-    border-radius: 8px;
-    border: 1px solid #aaa;
-  }
-</style>
-</head>
-
-<body>
-<div class="container">
-
-  <h2>Secure Payment Verification</h2>
-  <p>Please enter your name and WhatsApp number to continue.</p>
-
-  <label>Your Name:</label>
-  <input id="userName" />
-
-  <label>Your WhatsApp Number (62…):</label>
-  <input id="userWA" />
-
-  <button onclick="startPayment()">Continue Test</button>
-
-  <div id="proofSection" class="hidden">
-    <hr>
-    <h3>Upload Payment Proof</h3>
-    <input type="file" id="proofFile" accept="image/*">
-    <button onclick="submitProof()">Share Proof</button>
-  </div>
-
-  <div id="unlockSection" class="hidden">
-    <hr>
-    <h3>Enter Unlock Code</h3>
-    <input id="unlockInput" placeholder="Enter Unlock Code">
-    <button onclick="verifyUnlockCode()">Unlock</button>
-  </div>
-
-</div>
+<input id="userNameInput" placeholder="Name">
+<input id="userWAInput" placeholder="WhatsApp #">
+<button onclick="startConfirmation()">Confirmation</button>
 
 <script>
-// ------------------------------------------
-// GLOBAL VARIABLES
-// ------------------------------------------
-let generatedCode = "";
-let actualCode = "";
-let userName = "";
-let userWA = "";
+function startConfirmation() {
+  const name = document.getElementById("userNameInput").value.trim();
+  const wa = document.getElementById("userWAInput").value.trim();
 
-// ------------------------------------------
-// STEP 1 - USER STARTS PAYMENT
-// ------------------------------------------
-function startPayment() {
-  userName = document.getElementById("userName").value.trim();
-  userWA = document.getElementById("userWA").value.trim();
-
-  if (!userName || !userWA) {
-    alert("Please enter your name and WhatsApp number.");
+  if (!name || !wa) {
+    alert("Please enter Name & WhatsApp Number.");
     return;
   }
 
-  // generate unlock code
-  generatedCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-  actualCode = generatedCode;
+  // Step 1: Ask user to confirm
+  const ok = confirm(
+    "You are about to notify Admin.\nYou MUST share your payment proof.\nProceed?"
+  );
+  if (!ok) return;
 
-  document.getElementById("proofSection").classList.remove("hidden");
-
-  alert("Please upload your transfer proof to continue.");
-}
-
-// ------------------------------------------
-// STEP 2 - USER UPLOADS PROOF → SEND TO ADMIN
-// ------------------------------------------
-function submitProof() {
-  const file = document.getElementById("proofFile").files[0];
-  if (!file) {
-    alert("Please upload a screenshot or proof first.");
-    return;
-  }
-
-  // User waiting message
-  alert("Unlock In Progress...\nAdmin is reviewing your payment. Please wait.");
-
-  // Send WA message to admin
+  // Step 2: Notify admin (NO UNLOCK CODE YET)
   const adminMsg =
-    `Payment Proof Received:\n` +
-    `Name: ${userName}\n` +
-    `WA: ${userWA}\n` +
-    `Unlock Code: ${generatedCode}\n\n` +
-    `Press 1 to SEND unlock code.\n` +
-    `Press 2 to mark UNLOCK IN PROGRESS.`;
+    `PAYMENT CONFIRMATION REQUEST:\n` +
+    `Name: ${name}\n` +
+    `WA#: ${wa}\n\n` +
+    `Press:\n` +
+    `1️⃣  Send Unlock Code\n` +
+    `2️⃣  Unlock In Progress\n\n` +
+    `User is waiting.`;
 
   window.open(
     `https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,
     "_blank"
   );
 
-  // Now allow the user to enter unlock code after admin sends it
-  document.getElementById("unlockSection").classList.remove("hidden");
+  // Step 3: Tell user what to do next
+  alert(
+    "Admin has been notified.\n\nPlease SEND your payment proof to Admin via WhatsApp.\nAdmin will check and send your unlock code."
+  );
 }
 
-// ------------------------------------------
-// STEP 3 - VERIFY THE UNLOCK CODE
-// ------------------------------------------
-function verifyUnlockCode() {
-  const input = document.getElementById("unlockInput").value.trim();
+// User enters unlock code AFTER admin gives it manually
+function verifyUnlock() {
+  const code = prompt("Enter the unlock code given by admin:");
+  if (!code) return;
 
-  if (input === actualCode) {
-    alert("Unlock successful! Redirecting to the test...");
-    window.location.href =
-      "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
-  } else {
-    alert("Incorrect unlock code. Please try again.");
+  // Only admin-issued codes allowed
+  // No backend → simple validation pattern
+  if (code.length < 4) {
+    alert("Invalid unlock code. Please wait for admin.");
+    return;
   }
+
+  alert("Unlock Code Accepted.\nYou may continue the test.");
+  window.location.href =
+    "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
 }
 </script>
-
-</body>
-</html>
