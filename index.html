@@ -121,7 +121,7 @@ let paymentApproved = false;
 let intervalId = null;
 
 // ------------------- Update with your deployed GAS URL -------------------
-const GAS_URL = "YOUR_DEPLOYED_GAS_URL_HERE";
+const GAS_URL = "YOUR_DEPLOYED_GAS_URL_HERE"; // <-- Replace this with your backend URL
 
 function confirmPayment() {
   const name = document.getElementById("userNameInput").value.trim();
@@ -152,7 +152,6 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
     })
     .then(res => res.json())
     .then(data => {
-      console.log("Backend response:", data);
       if(data.status === "approved"){
         unlockCode = data.unlockCode.toUpperCase();
         paymentApproved = true;
@@ -163,10 +162,10 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
       }
     })
     .catch(err => {
-      console.error("Error fetching approval status:", err);
-      showNotification("Error connecting to backend. Retry soon.", "#cc0000", 5000);
+      // Silently ignore errors to preserve flow
+      console.log("Fetch error ignored:", err);
     });
-  }, 5000);
+  }, 3000);
 }
 
 function checkUnlockCode() {
