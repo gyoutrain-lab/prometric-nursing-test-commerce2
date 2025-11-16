@@ -29,26 +29,16 @@ body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; ove
   text-shadow: 0 0 5px rgba(0,0,0,0.6); /* readability */
 }
 
-.header-text {
-  position:absolute;
-  left:20px;
-  bottom:20px;
-  z-index:9999; /* text stays above the image */
-}
-
 .header-text .line1 {
   font-size:2rem;
   font-weight:bold;
-  color:#ffffff !important;
-  padding-top:20px; /* move main title down */
+  color:#ffffff !important; /* white title */
 }
 
 .header-text .line2 {
   font-size:1.2rem;
-  color:#ff3333 !important;
-  margin-top:10px;
-
-  padding-top:10px; /* move subtitle down */
+  color:#ff3333 !important; /* red subtitle */
+  margin-top:5px;
 }
 
 .qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; opacity:1; }
@@ -89,23 +79,6 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 <div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg">
 
   <!-- TEXT NOW ON TOP OF IMAGE (ANDROID COMPATIBLE) -->
-  <div class="bottom-half">
-  <!-- MOVE TEXT HERE ABOVE THE NAME FIELD -->
-  <div class="header-text">
-    <div class="line1">Nursing Prometric Actual Simulation Test</div>
-    <div class="line2">500 test items based on the SMLE & Enclex Test Materials</div>
-  </div>
-<!-- Your Name and WA inputs -->
-  <input id="nameInput" type="text" placeholder="Name..." class="input-field">
-  <input id="waInput" type="text" placeholder="WhatsApp Number..." class="input-field">
-
-  <!-- continue with QR / payment / etc -->
-  <!-- Your Name and WA inputs -->
-  <input id="nameInput" type="text" placeholder="Name..." class="input-field">
-  <input id="waInput" type="text" placeholder="WhatsApp Number..." class="input-field">
-
-  <!-- continue with QR / payment / etc -->
-
   <div class="header-text">
     <div class="line1">Nursing Prometric Actual Simulation Test</div>
     <div class="line2">500 test items based on the SMLE & Enclex Test Materials</div>
