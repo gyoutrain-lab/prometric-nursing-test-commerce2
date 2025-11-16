@@ -5,71 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nursing Prometric Test - Landing</title>
 
-<!-- =============================
-     Social Media / OG Tags
-     Image → Title → Description → URL
-============================= -->
+<meta property="og:title" content="Nursing Prometric Test">
+<meta property="og:description" content="Try Demo Test for free or continue Full Test with admin-controlled unlock code.">
 <meta property="og:image" content="https://gyoutrain-lab.github.io/assets/landing-thumbnail.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:title" content="Nursing Prometric Actual Simulation Test">
-<meta property="og:description" content="500 test items based on the SMLE & Enclex Test Materials">
-<meta property="og:url" content="https://gyoutrain-lab.github.io/prometric-nursing-test-commerce2/">
+<meta property="og:url" content="https://gyoutrain-lab.github.io/">
 <meta property="og:type" content="website">
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://gyoutrain-lab.github.io/assets/landing-thumbnail.jpg">
-<meta name="twitter:title" content="Nursing Prometric Actual Simulation Test">
-<meta name="twitter:description" content="500 test items based on the SMLE & Enclex Test Materials">
-
-<!-- =============================
-     Styles
-============================= -->
 <style>
 body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; overflow-x:hidden; background:#eef5f5; }
+.top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; }
+.bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
+.water-flow { position:absolute; top:0; left:0; width:200%; height:200%; background:url('assets/icon17%20(1).jpg') repeat; opacity:0.2; background-size:cover; animation:flow 15s linear infinite; pointer-events:none; }
+@keyframes flow { 0%{transform:translate(-50%,-50%) rotate(0deg);} 100%{transform:translate(-50%,-50%) rotate(360deg);} }
 
-.top-half {
-  width: 100%;
-  height: 50vh;
-  min-height: 40vh;
-  background: url('assets/icon17%20(1).jpg') center top/cover no-repeat;
-  position: relative;
-  z-index: 1;
-}
-
-.bottom-half {
-  width:100%;
-  height:50vh;
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  align-items:flex-start;
-  padding:20px;
-  box-sizing:border-box;
-  overflow:hidden;
-  background:#eef5f5;
-}
-
-.water-flow {
-  position:absolute;
-  top:0;
-  left:0;
-  width:200%;
-  height:200%;
-  background:url('assets/icon17%20(1).jpg') repeat;
-  opacity:0.2;
-  background-size:cover;
-  animation:flow 15s linear infinite;
-  pointer-events:none;
-}
-
-@keyframes flow {
-  0%{transform:translate(-50%,-50%) rotate(0deg);}
-  100%{transform:translate(-50%,-50%) rotate(360deg);}
-}
-
-.header-text { position: relative; z-index:2; padding-top:10px; }
 .header-text .line1 { font-size:2rem; font-weight:bold; color:#003366; }
 .header-text .line2 { font-size:1.2rem; color:#cc0000; margin-top:5px; }
 
@@ -94,22 +42,14 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 
 .notification { position:fixed; top:10px; left:50%; transform:translateX(-50%); padding:15px 20px; background-color:#007bff; color:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2); font-size:1rem; display:none; z-index:9999; max-width:90%; text-align:center; }
 
-/* Responsive */
 @media (max-width:768px){
-  .top-half { min-height:45vh; background-position: center 15%; }
-  .header-text .line1 { font-size:1.5rem; }
-  .header-text .line2 { font-size:1rem; margin-top:3px; }
   .qr-container { width:50%; max-width:250px; }
   input.unlock-code { width:100px; }
+  .header-text .line1 { font-size:1.5rem; }
+  .header-text .line2 { font-size:1rem; }
   .social-icons a img { width:30px; height:30px; }
   .user-info input { width:100%; }
   .buttons { flex-direction:column; gap:10px; }
-}
-
-@media (max-width:480px){
-  .top-half { min-height:40vh; background-position: center 10%; }
-  .header-text .line1 { font-size:1.3rem; }
-  .header-text .line2 { font-size:0.95rem; margin-top:2px; }
 }
 </style>
 </head>
@@ -150,69 +90,103 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 </div>
 
 <script>
-// Lazy-load
+// ------------------- Lazy load images -------------------
 function lazyLoadImage(img){
   const src = img.getAttribute('data-src');
-  if(src){ img.src = src; img.onload=()=>{img.style.opacity=1;}; img.removeAttribute('data-src'); }
+  if(src){
+    img.src = src;
+    img.style.opacity = 1;
+    img.removeAttribute('data-src');
+  }
 }
-window.addEventListener('load',()=>{
-  const top=document.getElementById('topHalf');
-  const qr=document.getElementById('danaQR');
-  const topSrc = top.getAttribute('data-src');
-  if(topSrc){ const tempImg=new Image(); tempImg.src=topSrc; tempImg.onload=()=>{ top.style.backgroundImage=`url('${topSrc}')`; }; }
+window.addEventListener('load', () => {
+  const top = document.getElementById('topHalf');
+  const qr = document.getElementById('danaQR');
+  top.style.backgroundImage = `url('${top.getAttribute('data-src')}')`;
   lazyLoadImage(qr);
 });
 
-// Notifications
-function showNotification(msg,color="#007bff",duration=3500){
-  const box=document.getElementById("notificationBox");
-  box.style.backgroundColor=color;
-  box.innerText=msg;
-  box.style.display="block";
-  setTimeout(()=>{ box.style.display="none"; },duration);
+// ------------------- Notification -------------------
+function showNotification(msg, color="#007bff", duration=3500){
+  const box = document.getElementById("notificationBox");
+  box.style.backgroundColor = color;
+  box.innerText = msg;
+  box.style.display = "block";
+  setTimeout(() => { box.style.display = "none"; }, duration);
 }
 
-// Admin unlock workflow
-let unlockCode="", paymentApproved=false, intervalId=null;
+// ------------------- Admin-controlled unlock -------------------
+let unlockCode = "";
+let paymentApproved = false;
+let intervalId = null;
 
-function confirmPayment(){
-  const name=document.getElementById("userNameInput").value.trim();
-  const wa=document.getElementById("userWAInput").value.trim();
-  if(!name||!wa){ showNotification("Please fill Name + WA.", "#cc0000"); return; }
+// ------------------- Update with your deployed GAS URL -------------------
+const GAS_URL = "YOUR_DEPLOYED_GAS_URL_HERE";
 
-  const adminMsg=`Payment Pending:\nName: ${name}\nWA #: ${wa}\nCheck QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to continue Next Test`;
-  window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`,"_blank");
+function confirmPayment() {
+  const name = document.getElementById("userNameInput").value.trim();
+  const wa = document.getElementById("userWAInput").value.trim();
+  if(!name || !wa){
+    showNotification("Please fill Name + WA.", "#cc0000");
+    return;
+  }
 
-  document.getElementById("unlockCodeInput").disabled=true;
-  document.getElementById("continue-btn").disabled=true;
+  const adminMsg = `Payment Pending:
+Name: ${name}
+WA #: ${wa}
+Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to continue Next Test`;
+
+  window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`, "_blank");
+
+  document.getElementById("unlockCodeInput").disabled = true;
+  document.getElementById("continue-btn").disabled = true;
   showNotification("Payment pending. Wait for admin confirmation.", "#ffc107");
 
-  const GAS_URL="https://script.google.com/macros/s/AKfycbzIfzn164axPDK4hIXZxZCccCVxmfaO5hxOMyVExE0YfDyXY9TCrYRc067gDDhorQJhqQ/exec";
   if(intervalId) clearInterval(intervalId);
-  intervalId=setInterval(()=>{
-    fetch(GAS_URL,{method:"POST", body:JSON.stringify({name:name, wa:wa})})
-    .then(res=>res.json())
-    .then(data=>{
-      if(data.status==="approved"){
-        unlockCode=data.unlockCode.toUpperCase();
-        paymentApproved=true;
-        document.getElementById("unlockCodeInput").disabled=false;
-        document.getElementById("continue-btn").disabled=false;
+
+  intervalId = setInterval(() => {
+    fetch(GAS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name, wa: wa })
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("Backend response:", data);
+      if(data.status === "approved"){
+        unlockCode = data.unlockCode.toUpperCase();
+        paymentApproved = true;
+        document.getElementById("unlockCodeInput").disabled = false;
+        document.getElementById("continue-btn").disabled = false;
         clearInterval(intervalId);
         showNotification("Payment confirmed. Enter the unlock code from admin.", "#28a745");
       }
-    }).catch(err=>console.log(err));
-  },3000);
+    })
+    .catch(err => {
+      console.error("Error fetching approval status:", err);
+      showNotification("Error connecting to backend. Retry soon.", "#cc0000", 5000);
+    });
+  }, 5000);
 }
 
-function checkUnlockCode(){
-  const codeInput=document.getElementById("unlockCodeInput").value.trim().toUpperCase();
-  if(!codeInput){ showNotification("Enter unlock code.", "#cc0000"); return; }
-  if(!paymentApproved){ showNotification("Unlock code not approved yet.", "#cc0000"); return; }
-  if(codeInput===unlockCode){
+function checkUnlockCode() {
+  const codeInput = document.getElementById("unlockCodeInput").value.trim().toUpperCase();
+  if(!codeInput){
+    showNotification("Enter unlock code.", "#cc0000");
+    return;
+  }
+  if(!paymentApproved){
+    showNotification("Unlock code not approved yet.", "#cc0000");
+    return;
+  }
+  if(codeInput === unlockCode){
     showNotification("Unlock code valid! Redirecting...", "#28a745");
-    setTimeout(()=>{ window.location.href="https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/"; }, 1000);
-  }else{ showNotification("Invalid unlock code. Contact admin.", "#cc0000"); }
+    setTimeout(() => {
+      window.location.href = "https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
+    }, 1000);
+  } else {
+    showNotification("Invalid unlock code. Contact admin.", "#cc0000");
+  }
 }
 </script>
 </body>
