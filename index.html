@@ -4,31 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nursing Prometric Test - Landing</title>
-
-<meta property="og:title" content="Nursing Prometric Test">
-<meta property="og:description" content="Try Demo Test for free or continue Full Test with admin-controlled unlock code.">
-<meta property="og:image" content="https://gyoutrain-lab.github.io/assets/landing-thumbnail.jpg">
-<meta property="og:url" content="https://gyoutrain-lab.github.io/">
-<meta property="og:type" content="website">
-
 <style>
 body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; overflow-x:hidden; background:#eef5f5; }
-.top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; }
+
+/* Top section with overlay */
+.top-half {
+  width:100%; height:50vh;
+  position:relative; /* needed for overlay */
+  background:url('assets/icon17%20(1).jpg') center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.overlay-text {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  text-align:center;
+  color:#ffffff;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+  z-index:2;
+}
+
+.overlay-text .line1 {
+  font-size:2rem; font-weight:bold;
+}
+
+.overlay-text .line2 {
+  font-size:1.2rem; color:#ff3333; margin-top:5px;
+}
+
 .bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
 .water-flow { position:absolute; top:0; left:0; width:200%; height:200%; background:url('assets/icon17%20(1).jpg') repeat; opacity:0.2; background-size:cover; animation:flow 15s linear infinite; pointer-events:none; }
 @keyframes flow { 0%{transform:translate(-50%,-50%) rotate(0deg);} 100%{transform:translate(-50%,-50%) rotate(360deg);} }
-
-.header-text .line1 { font-size:2rem; font-weight:bold; color:#003366; }
-.header-text .line2 { font-size:1.2rem; color:#cc0000; margin-top:5px; }
-
+.bottom-half h2 { color:#000; font-size:1.5rem; margin:0 0 10px 0; z-index:2; position:relative; }
 .qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; opacity:1; }
 .user-info { margin-top:10px; font-size:0.9rem; color:#000; display:flex; flex-wrap:wrap; gap:10px; }
 .user-info input { padding:5px 10px; border-radius:5px; border:1px solid #ccc; font-size:0.9rem; width:calc(50% - 10px); }
-
 .social-icons { margin-top:15px; display:flex; gap:15px; z-index:2; position:relative; }
 .social-icons a img { width:40px; height:40px; cursor:pointer; transition:transform 0.3s; }
 .social-icons a img:hover { transform:scale(1.2); }
-
 .buttons { margin-top:15px; z-index:2; position:relative; display:flex; flex-wrap:wrap; gap:10px; }
 button { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-size:1rem; transition:0.3s; }
 #demo-btn { background-color:#ffc107; color:#000; }
@@ -37,35 +54,31 @@ button { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font
 #continue-btn:hover { background-color:#218838; }
 #confirm-btn { background-color:#007bff; color:#fff; }
 #confirm-btn:hover { background-color:#0056b3; }
-
 input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5px; border:1px solid #ccc; }
-
-.notification { position:fixed; top:10px; left:50%; transform:translateX(-50%); padding:15px 20px; background-color:#007bff; color:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2); font-size:1rem; display:none; z-index:9999; max-width:90%; text-align:center; }
-
 @media (max-width:768px){
   .qr-container { width:50%; max-width:250px; }
   input.unlock-code { width:100px; }
-  .header-text .line1 { font-size:1.5rem; }
-  .header-text .line2 { font-size:1rem; }
+  .bottom-half h2 { font-size:1.2rem; }
   .social-icons a img { width:30px; height:30px; }
   .user-info input { width:100%; }
   .buttons { flex-direction:column; gap:10px; }
+  .overlay-text .line1 { font-size:1.5rem; }
+  .overlay-text .line2 { font-size:1rem; }
 }
 </style>
 </head>
 <body>
 
-<div class="notification" id="notificationBox"></div>
-
-<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg"></div>
-
-<div class="bottom-half">
-  <div class="water-flow"></div>
-  <div class="header-text">
+<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg">
+  <!-- Overlay text -->
+  <div class="overlay-text">
     <div class="line1">Nursing Prometric Actual Simulation Test</div>
     <div class="line2">500 test items based on the SMLE & Enclex Test Materials</div>
   </div>
+</div>
 
+<div class="bottom-half">
+  <div class="water-flow"></div>
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
   <div class="user-info">
@@ -101,16 +114,6 @@ window.addEventListener('load',()=>{
   lazyLoadImage(qr);
 });
 
-// Notification helper
-function showNotification(msg, color="#007bff", duration=3500){
-  const box=document.getElementById("notificationBox");
-  box.style.backgroundColor=color;
-  box.innerText=msg;
-  box.style.display="block";
-  setTimeout(()=>{ box.style.display="none"; }, duration);
-}
-
-// Admin-controlled unlock
 let unlockCode="";
 let paymentApproved=false;
 let intervalId=null;
@@ -118,7 +121,8 @@ let intervalId=null;
 function confirmPayment(){
   const name=document.getElementById("userNameInput").value.trim();
   const wa=document.getElementById("userWAInput").value.trim();
-  if(!name || !wa){ showNotification("Please fill Name + WA.", "#cc0000"); return; }
+
+  if(!name || !wa){ alert("Please fill Name + WA."); return; }
 
   const adminMsg=`Payment Pending:
 Name: ${name}
@@ -129,9 +133,7 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
 
   document.getElementById("unlockCodeInput").disabled=true;
   document.getElementById("continue-btn").disabled=true;
-  showNotification("Payment pending. Wait for admin confirmation.", "#ffc107");
 
-  // Poll Google Sheet for approval
   const GAS_URL="https://script.google.com/macros/s/AKfycbzIfzn164axPDK4hIXZxZCccCVxmfaO5hxOMyVExE0YfDyXY9TCrYRc067gDDhorQJhqQ/exec";
   if(intervalId) clearInterval(intervalId);
   intervalId=setInterval(()=>{
@@ -146,7 +148,7 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
         document.getElementById("unlockCodeInput").disabled=false;
         document.getElementById("continue-btn").disabled=false;
         clearInterval(intervalId);
-        showNotification("Payment confirmed. Enter the unlock code from admin.", "#28a745");
+        alert("Payment confirmed by admin. Enter the unlock code provided by admin to continue.");
       }
     }).catch(err=>console.log(err));
   },3000);
@@ -154,15 +156,16 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
 
 function checkUnlockCode(){
   const codeInput=document.getElementById("unlockCodeInput").value.trim().toUpperCase();
-  if(!codeInput){ showNotification("Enter unlock code.", "#cc0000"); return; }
-  if(!paymentApproved){ showNotification("Unlock code not approved yet.", "#cc0000"); return; }
+  if(!codeInput){ alert("Enter unlock code."); return; }
+  if(!paymentApproved){ alert("Unlock code not approved yet."); return; }
   if(codeInput===unlockCode){
-    showNotification("Unlock code valid! Redirecting...", "#28a745");
-    setTimeout(()=>{ window.location.href="https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/"; }, 1000);
+    alert("Unlock code valid! Redirecting...");
+    window.location.href="https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
   }else{
-    showNotification("Invalid unlock code. Contact admin.", "#cc0000");
+    alert("Invalid unlock code. Contact admin.");
   }
 }
 </script>
+
 </body>
 </html>
