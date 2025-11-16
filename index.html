@@ -9,37 +9,67 @@
      Social Media / OG Tags
      Image → Title → Description → URL
 ============================= -->
-<!-- IMAGE FIRST -->
 <meta property="og:image" content="https://gyoutrain-lab.github.io/assets/landing-thumbnail.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-
-<!-- TITLE NEXT -->
-<meta property="og:title" content="Nursing Prometric Test">
-
-<!-- DESCRIPTION -->
-<meta property="og:description" content="Try Demo Test for free or continue Full Test with admin-controlled unlock code.">
-
-<!-- URL -->
+<meta property="og:title" content="Nursing Prometric Actual Simulation Test">
+<meta property="og:description" content="500 test items based on the SMLE & Enclex Test Materials">
 <meta property="og:url" content="https://gyoutrain-lab.github.io/prometric-nursing-test-commerce2/">
 <meta property="og:type" content="website">
 
-<!-- Optional: Twitter Cards -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://gyoutrain-lab.github.io/assets/landing-thumbnail.jpg">
-<meta name="twitter:title" content="Nursing Prometric Test">
-<meta name="twitter:description" content="Try Demo Test for free or continue Full Test with admin-controlled unlock code.">
+<meta name="twitter:title" content="Nursing Prometric Actual Simulation Test">
+<meta name="twitter:description" content="500 test items based on the SMLE & Enclex Test Materials">
 
 <!-- =============================
      Styles
 ============================= -->
 <style>
 body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; overflow-x:hidden; background:#eef5f5; }
-.top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; }
-.bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
-.water-flow { position:absolute; top:0; left:0; width:200%; height:200%; background:url('assets/icon17%20(1).jpg') repeat; opacity:0.2; background-size:cover; animation:flow 15s linear infinite; pointer-events:none; }
-@keyframes flow { 0%{transform:translate(-50%,-50%) rotate(0deg);} 100%{transform:translate(-50%,-50%) rotate(360deg);} }
 
+.top-half {
+  width: 100%;
+  height: 50vh;
+  min-height: 40vh;
+  background: url('assets/icon17%20(1).jpg') center top/cover no-repeat;
+  position: relative;
+  z-index: 1;
+}
+
+.bottom-half {
+  width:100%;
+  height:50vh;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:flex-start;
+  padding:20px;
+  box-sizing:border-box;
+  overflow:hidden;
+  background:#eef5f5;
+}
+
+.water-flow {
+  position:absolute;
+  top:0;
+  left:0;
+  width:200%;
+  height:200%;
+  background:url('assets/icon17%20(1).jpg') repeat;
+  opacity:0.2;
+  background-size:cover;
+  animation:flow 15s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes flow {
+  0%{transform:translate(-50%,-50%) rotate(0deg);}
+  100%{transform:translate(-50%,-50%) rotate(360deg);}
+}
+
+.header-text { position: relative; z-index:2; padding-top:10px; }
 .header-text .line1 { font-size:2rem; font-weight:bold; color:#003366; }
 .header-text .line2 { font-size:1.2rem; color:#cc0000; margin-top:5px; }
 
@@ -66,21 +96,21 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 
 /* Responsive */
 @media (max-width:768px){
+  .top-half { min-height:45vh; background-position: center 15%; }
+  .header-text .line1 { font-size:1.5rem; }
+  .header-text .line2 { font-size:1rem; margin-top:3px; }
   .qr-container { width:50%; max-width:250px; }
   input.unlock-code { width:100px; }
-  .header-text .line1 { font-size:1.5rem; }
-  .header-text .line2 { font-size:1rem; }
   .social-icons a img { width:30px; height:30px; }
   .user-info input { width:100%; }
   .buttons { flex-direction:column; gap:10px; }
 }
 
-/* Android fixes */
-.top-half { position: relative; min-height:50vh; max-height:60vh; z-index:1; background-position:center top; }
-.bottom-half .header-text { position:relative; z-index:2; padding-top:10px; }
-@media (max-width:768px){ .top-half { min-height:45vh; } .header-text .line1 { font-size:1.5rem; } .header-text .line2 { font-size:1rem; margin-top:3px; } }
-@media (max-width:480px){ .top-half { min-height:40vh; } .header-text { padding-top:5px; } .header-text .line1 { font-size:1.3rem; } .header-text .line2 { font-size:0.95rem; } }
-.bottom-half .water-flow { z-index:1; }
+@media (max-width:480px){
+  .top-half { min-height:40vh; background-position: center 10%; }
+  .header-text .line1 { font-size:1.3rem; }
+  .header-text .line2 { font-size:0.95rem; margin-top:2px; }
+}
 </style>
 </head>
 <body>
@@ -120,12 +150,11 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 </div>
 
 <script>
-// Lazy-load fix for Android
+// Lazy-load
 function lazyLoadImage(img){
   const src = img.getAttribute('data-src');
   if(src){ img.src = src; img.onload=()=>{img.style.opacity=1;}; img.removeAttribute('data-src'); }
 }
-
 window.addEventListener('load',()=>{
   const top=document.getElementById('topHalf');
   const qr=document.getElementById('danaQR');
