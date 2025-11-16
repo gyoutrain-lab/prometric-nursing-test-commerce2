@@ -29,6 +29,16 @@ body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; ove
   text-shadow: 0 0 5px rgba(0,0,0,0.6); /* readability */
 }
 
+.header-text {
+  position:absolute;
+  left:20px;
+  bottom:20px; 
+  z-index:9999; /* stays on top of the image layer */
+  
+  /* MOVE TEXT DOWN (two line steps) */
+  margin-bottom:-40px; 
+}
+
 .header-text .line1 {
   font-size:2rem;
   font-weight:bold;
@@ -39,6 +49,7 @@ body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; ove
   font-size:1.2rem;
   color:#ff3333 !important; /* red subtitle */
   margin-top:5px;
+}
 }
 
 .qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; opacity:1; }
