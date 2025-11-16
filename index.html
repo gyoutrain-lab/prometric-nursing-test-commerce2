@@ -218,14 +218,26 @@ let paymentApproved = false;
 function confirmPayment(){
   const name = document.getElementById("userNameInput").value.trim();
   const wa = document.getElementById("userWAInput").value.trim();
-  if(!name || !wa){ alert("Please fill Name + WA. Check Payment - QR Dana just IDR 50k - Share Proof"); return; }
 
-  const adminMsg = `Payment Pending:\nName: ${name}\nWA #: ${wa}`;
+  if(!name || !wa){
+    alert("Please fill Name + WA.");
+    return;
+  }
+
+  // Updated message for admin notification
+  const adminMsg = `Payment Pending:
+Name: ${name}
+WA #: ${wa}
+Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to continue Next Test`;
+
+  // Open WhatsApp link for admin
   window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`, "_blank");
 
   document.getElementById("unlockCodeInput").disabled = true;
   document.getElementById("continue-btn").disabled = true;
 
+  // Optional: polling for admin approval via Google Sheet...
+}
   const GAS_URL = "https://script.google.com/macros/s/AKfycbzIfzn164axPDK4hIXZxZCccCVxmfaO5hxOMyVExE0YfDyXY9TCrYRc067gDDhorQJhqQ/exec";
   const intervalId = setInterval(() => {
     fetch(GAS_URL, { method: "POST", body: JSON.stringify({name:name, wa:wa}) })
