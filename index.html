@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,39 +13,13 @@
 
 <style>
 body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; overflow-x:hidden; background:#eef5f5; }
-.top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; position:relative; }
-
+.top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; }
 .bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
-
 .water-flow { position:absolute; top:0; left:0; width:200%; height:200%; background:url('assets/icon17%20(1).jpg') repeat; opacity:0.2; background-size:cover; animation:flow 15s linear infinite; pointer-events:none; }
 @keyframes flow { 0%{transform:translate(-50%,-50%) rotate(0deg);} 100%{transform:translate(-50%,-50%) rotate(360deg);} }
 
-/* ✅ FIX: Text above image layer, bottom-left of the top image */
-.header-text {
-  position:absolute;
-  left:20px;
-  bottom:20px;
-  z-index:9999; /* text stays above the image */
-}
-
-.header-text .line1 {
-  font-size:2rem;
-  font-weight:bold;
-  color:#ffffff !important;
-  
-  /* move title downward */
-  padding-top:20px;
-}
-
-.header-text .line2 {
-  font-size:1.2rem;
-  color:#ff3333 !important;
-  margin-top:10px; /* normal spacing */
-  
-  /* move subtitle downward to follow title */
-  padding-top:10px;
-}
-}
+.header-text .line1 { font-size:2rem; font-weight:bold; color:#003366; }
+.header-text .line2 { font-size:1.2rem; color:#cc0000; margin-top:5px; }
 
 .qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; opacity:1; }
 .user-info { margin-top:10px; font-size:0.9rem; color:#000; display:flex; flex-wrap:wrap; gap:10px; }
@@ -69,9 +43,10 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 .notification { position:fixed; top:10px; left:50%; transform:translateX(-50%); padding:15px 20px; background-color:#007bff; color:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2); font-size:1rem; display:none; z-index:9999; max-width:90%; text-align:center; }
 
 @media (max-width:768px){
-  .header-text .line1 { font-size:1.6rem; }
-  .header-text .line2 { font-size:1rem; }
   .qr-container { width:50%; max-width:250px; }
+  input.unlock-code { width:100px; }
+  .header-text .line1 { font-size:1.5rem; }
+  .header-text .line2 { font-size:1rem; }
   .social-icons a img { width:30px; height:30px; }
   .user-info input { width:100%; }
   .buttons { flex-direction:column; gap:10px; }
@@ -82,18 +57,14 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 
 <div class="notification" id="notificationBox"></div>
 
-<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg">
+<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg"></div>
 
-  <!-- TEXT NOW ON TOP OF IMAGE (ANDROID COMPATIBLE) -->
+<div class="bottom-half">
+  <div class="water-flow"></div>
   <div class="header-text">
     <div class="line1">Nursing Prometric Actual Simulation Test</div>
     <div class="line2">500 test items based on the SMLE & Enclex Test Materials</div>
   </div>
-
-</div>
-
-<div class="bottom-half">
-  <div class="water-flow"></div>
 
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
@@ -160,6 +131,7 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
   document.getElementById("continue-btn").disabled=true;
   showNotification("Payment pending. Wait for admin confirmation.", "#ffc107");
 
+  // Poll Google Sheet for approval
   const GAS_URL="https://script.google.com/macros/s/AKfycbzIfzn164axPDK4hIXZxZCccCVxmfaO5hxOMyVExE0YfDyXY9TCrYRc067gDDhorQJhqQ/exec";
   if(intervalId) clearInterval(intervalId);
   intervalId=setInterval(()=>{
@@ -193,4 +165,4 @@ function checkUnlockCode(){
 }
 </script>
 </body>
-</html>
+</html
