@@ -21,26 +21,29 @@ body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; ove
 @keyframes flow { 0%{transform:translate(-50%,-50%) rotate(0deg);} 100%{transform:translate(-50%,-50%) rotate(360deg);} }
 
 /* ✅ FIX: Text above image layer, bottom-left of the top image */
+/* Center-top text with shiny dark-blue color */
 .header-text {
   position: absolute;
-  bottom: 15px;
-  left: 15px;
-  z-index: 10; /* always on top, visible on Android */
-  text-shadow: 0 0 5px rgba(0,0,0,0.6); /* readability */
+  top: 20px;              /* move downward a little from top */
+  left: 50%;              /* center horizontally */
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
 }
 
 .header-text .line1 {
-  font-size:2rem;
-  font-weight:bold;
-  color:#ffffff !important; /* white title */
+  font-size: 2rem;
+  font-weight: bold;
+  color: #003399;         /* dark blue shiny title */
+  text-shadow: 0 0 6px rgba(255,255,255,0.6);
 }
 
 .header-text .line2 {
-  font-size:1.2rem;
-  color:#ff3333 !important; /* red subtitle */
-  margin-top:5px;
+  font-size: 1.2rem;
+  color: #0055ff;         /* lighter shiny blue subtitle */
+  margin-top: 5px;
+  text-shadow: 0 0 4px rgba(255,255,255,0.4);
 }
-
 .qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; opacity:1; }
 .user-info { margin-top:10px; font-size:0.9rem; color:#000; display:flex; flex-wrap:wrap; gap:10px; }
 .user-info input { padding:5px 10px; border-radius:5px; border:1px solid #ccc; font-size:0.9rem; width:calc(50% - 10px); }
