@@ -26,6 +26,9 @@ button { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font
 #confirm-btn { background-color:#007bff; color:#fff; }
 #confirm-btn:hover { background-color:#0056b3; }
 input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5px; border:1px solid #ccc; }
+.header-text { position:relative; z-index:2; margin-bottom:10px; }
+.header-text .line1 { font-size:2rem; font-weight:bold; color:#001f5b; }
+.header-text .line2 { font-size:1.2rem; font-weight:normal; color:red; margin-top:5px; }
 @media (max-width:768px){
   .qr-container { width:50%; max-width:250px; }
   input.unlock-code { width:100px; }
@@ -42,7 +45,12 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 
 <div class="bottom-half">
   <div class="water-flow"></div>
-  <h2>Nursing Prometric Simulation Test based on the SMLE & Enclex Test materials</h2>
+
+  <div class="header-text">
+    <div class="line1">Nursing Prometric Actual Simulation Test</div>
+    <div class="line2">500 test items based on the SMLE & Enclex Test Materials</div>
+  </div>
+
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
   <div class="user-info">
@@ -68,8 +76,8 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 
 <script>
 function lazyLoadImage(img){
-  const src = img.getAttribute('data-src');
-  if(src){ img.src = src; img.style.opacity=1; img.removeAttribute('data-src'); }
+  const src=img.getAttribute('data-src');
+  if(src){ img.src=src; img.style.opacity=1; img.removeAttribute('data-src'); }
 }
 window.addEventListener('load',()=>{
   const top=document.getElementById('topHalf');
@@ -98,9 +106,10 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
   document.getElementById("unlockCodeInput").disabled=true;
   document.getElementById("continue-btn").disabled=true;
 
-  // Poll Google Sheet for approval
   const GAS_URL="https://script.google.com/macros/s/AKfycbzIfzn164axPDK4hIXZxZCccCVxmfaO5hxOMyVExE0YfDyXY9TCrYRc067gDDhorQJhqQ/exec";
+
   if(intervalId) clearInterval(intervalId);
+
   intervalId=setInterval(()=>{
     fetch(GAS_URL,{
       method:"POST",
@@ -126,7 +135,7 @@ function checkUnlockCode(){
   if(codeInput===unlockCode){
     alert("Unlock code valid! Redirecting...");
     window.location.href="https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/";
-  }else{
+  } else {
     alert("Invalid unlock code. Contact admin.");
   }
 }
