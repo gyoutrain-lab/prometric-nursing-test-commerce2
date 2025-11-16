@@ -173,7 +173,7 @@ input.unlock-code {
 
 <div class="bottom-half">
   <div class="water-flow"></div>
-  <h2>Check the QR Dana to put IDR 50k</h2>
+  <h2>Nursing Prometric Simulation Test based on the SMLE & Enclex Test materials</h2>
   <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
   <div class="user-info">
@@ -218,7 +218,7 @@ let paymentApproved = false;
 function confirmPayment(){
   const name = document.getElementById("userNameInput").value.trim();
   const wa = document.getElementById("userWAInput").value.trim();
-  if(!name || !wa){ alert("Please fill Name + WA."); return; }
+  if(!name || !wa){ alert("Please fill Name + WA. Check Payment - QR Dana just IDR 50k - Share Proof"); return; }
 
   const adminMsg = `Payment Pending:\nName: ${name}\nWA #: ${wa}`;
   window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`, "_blank");
