@@ -7,17 +7,17 @@
 <style>
 body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; overflow-x:hidden; background:#eef5f5; }
 .top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; position: relative; }
-.bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
+.bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-start; align-items:center; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
 .water-flow { position:absolute; top:0; left:0; width:200%; height:200%; background:url('assets/icon17%20(1).jpg') repeat; opacity:0.2; background-size:cover; animation:flow 15s linear infinite; pointer-events:none; }
 @keyframes flow { 0%{transform:translate(-50%,-50%) rotate(0deg);} 100%{transform:translate(-50%,-50%) rotate(360deg);} }
 
-/* Text overlay on left-center */
-.header-text { position:absolute; left:20px; top:50%; transform:translateY(-50%); z-index:2; color:#003366; }
+/* Test title at center below image */
+.header-text { text-align:center; margin-top:-50px; z-index:2; color:#003366; }
 .header-text .line1 { font-size:1.8rem; font-weight:bold; margin-bottom:5px; }
 .header-text .line2 { font-size:1.1rem; color:red; }
 
-/* QR image centered bottom */
-.qr-container { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); width:25%; max-width:200px; z-index:2; opacity:1; }
+/* QR bottom-right corner */
+.qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; }
 
 /* User input section */
 .user-info { margin-top:10px; font-size:0.9rem; color:#000; display:flex; flex-wrap:wrap; gap:10px; z-index:2; position:relative; }
@@ -42,15 +42,15 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 @media (max-width:768px){
   .qr-container { width:50%; max-width:250px; }
   input.unlock-code { width:100px; }
-  .bottom-half h2 { font-size:1.2rem; }
+  .header-text .line1 { font-size:1.3rem; }
+  .header-text .line2 { font-size:1rem; }
   .social-icons a img { width:30px; height:30px; }
   .user-info input { width:100%; }
   .buttons { flex-direction:column; gap:10px; }
-  .header-text { left:10px; font-size:0.9rem; }
 }
 </style>
 
-<!-- Open Graph / Social Media Thumbnails -->
+<!-- Social Media Thumbnails -->
 <meta property="og:title" content="Nursing Prometric Test - Simulation Portal">
 <meta property="og:description" content="Check QR Dana - Just IDR 50k - Share Proof - Get Unlock Code for Next Test">
 <meta property="og:image" content="https://yourdomain.com/assets/icon17%20(1).jpg">
@@ -64,17 +64,20 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 
 <div class="bottom-half">
   <div class="water-flow"></div>
+
+  <!-- Centered Test Title -->
   <div class="header-text">
     <div class="line1">Nursing Prometric Actual Simulation Test</div>
     <div class="line2">500 test items based on the SMLE & Enclex Test Materials</div>
   </div>
-  <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
 
+  <!-- User inputs -->
   <div class="user-info">
     <input type="text" id="userNameInput" placeholder="Enter your name" required>
     <input type="text" id="userWAInput" placeholder="Enter your WA #" required>
   </div>
 
+  <!-- Social icons -->
   <div class="social-icons">
     <a href="tel:+6285399652487" title="Call"><img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Call"></a>
     <a href="https://wa.me/6285399652487" target="_blank" title="WhatsApp"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
@@ -83,12 +86,17 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
     <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank" title="Instagram"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"></a>
   </div>
 
+  <!-- Buttons and Unlock -->
   <div class="buttons">
     <button id="demo-btn" onclick="window.location.href='https://gyoutrain-lab.github.io/prometric-nursing-test-demo/'">Demo Test (Free)</button>
     <button id="confirm-btn" onclick="confirmPayment()">Confirmation</button>
     <input type="text" class="unlock-code" id="unlockCodeInput" placeholder="Enter unlock code" disabled>
     <button id="continue-btn" onclick="checkUnlockCode()" disabled>Continue Next Test</button>
   </div>
+
+  <!-- QR Dana bottom-right -->
+  <img id="danaQR" class="qr-container" data-src="assets/dana_qr.png" alt="Dana QR">
+
 </div>
 
 <script>
