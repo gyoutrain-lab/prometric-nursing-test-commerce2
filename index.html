@@ -5,53 +5,59 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nursing Prometric Test - Landing</title>
 
+<!-- ★ OPENGRAPH THUMBNAIL (Facebook, WhatsApp, LINE, Telegram, Instagram DM, Messenger) -->
 <meta property="og:title" content="Nursing Prometric Test">
 <meta property="og:description" content="Try Demo Test for free or continue Full Test with admin-controlled unlock code.">
 <meta property="og:image" content="https://raw.githubusercontent.com/gyoutrain-lab/prometric-nursing-test-commerce2/main/assets/icon17%20(1).jpg">
-<meta property="og:url" content="https://gyoutrain-lab.github.io/">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://gyoutrain-lab.github.io/prometric-nursing-test-commerce2/">
 <meta property="og:type" content="website">
+
+<!-- ★ Fallback thumbnail (WhatsApp sometimes requires this) -->
+<link rel="image_src" href="https://raw.githubusercontent.com/gyoutrain-lab/prometric-nursing-test-commerce2/main/assets/icon17%20(1).jpg">
 
 <style>
 body, html { margin:0; padding:0; font-family:Arial,sans-serif; height:100%; overflow-x:hidden; background:#eef5f5; }
-.top-half { width:100%; height:50vh; background:url('assets/icon17%20(1).jpg') center/cover no-repeat; position:relative; }
 
-.bottom-half { width:100%; height:50vh; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:flex-start; padding:20px; box-sizing:border-box; overflow:hidden; background:#eef5f5; }
-
-.water-flow { position:absolute; top:0; left:0; width:200%; height:200%; background:url('assets/icon17%20(1).jpg') repeat; opacity:0.2; background-size:cover; animation:flow 15s linear infinite; pointer-events:none; }
-@keyframes flow { 0%{transform:translate(-50%,-50%) rotate(0deg);} 100%{transform:translate(-50%,-50%) rotate(360deg);} }
-
-/* ✅ FIX: Text above image layer, bottom-left of the top image */
-/* Center-top text with shiny dark-blue color */
-/* Center-middle text with dark blue + shiny red */
-/* Center-middle-lower text with dark blue + shiny red */
-/* Center-lower text with shiny dark blue & shiny red */
-.header-text {
-  position: absolute;
-  top: 75%;                        /* lower in the top image */
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 20;                     /* stays above Android image layer */
+.top-half {
+  width:100%;
+  height:50vh;
+  background:url('assets/icon17%20(1).jpg') center/cover no-repeat;
+  position:relative;
 }
 
-.header-text .line1 {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #002266;                  /* dark shiny blue */
-  text-shadow: 
-      0 0 8px rgba(255,255,255,0.7),
-      0 0 12px rgba(0,0,80,0.5);
+.bottom-half {
+  width:100%;
+  height:50vh;
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:flex-start;
+  padding:20px;
+  box-sizing:border-box;
+  overflow:hidden;
+  background:#eef5f5;
 }
 
-.header-text .line2 {
-  font-size: 1.2rem;
-  color: #ff0022;                  /* shiny bright red */
-  margin-top: 8px;
-  text-shadow:
-      0 0 6px rgba(255,255,255,0.6),
-      0 0 10px rgba(120,0,0,0.6);
+.water-flow {
+  position:absolute;
+  top:0; left:0;
+  width:200%; height:200%;
+  background:url('assets/icon17%20(1).jpg') repeat;
+  opacity:0.2;
+  background-size:cover;
+  animation:flow 15s linear infinite;
+  pointer-events:none;
 }
+@keyframes flow {
+  0%{transform:translate(-50%,-50%) rotate(0deg);}
+  100%{transform:translate(-50%,-50%) rotate(360deg);}
+}
+
 .qr-container { position:absolute; bottom:20px; right:20px; width:25%; max-width:200px; z-index:2; opacity:1; }
+
 .user-info { margin-top:10px; font-size:0.9rem; color:#000; display:flex; flex-wrap:wrap; gap:10px; }
 .user-info input { padding:5px 10px; border-radius:5px; border:1px solid #ccc; font-size:0.9rem; width:calc(50% - 10px); }
 
@@ -70,15 +76,43 @@ button { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font
 
 input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5px; border:1px solid #ccc; }
 
-.notification { position:fixed; top:10px; left:50%; transform:translateX(-50%); padding:15px 20px; background-color:#007bff; color:#fff; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2); font-size:1rem; display:none; z-index:9999; max-width:90%; text-align:center; }
+.notification {
+  position:fixed; top:10px; left:50%; transform:translateX(-50%);
+  padding:15px 20px; background-color:#007bff; color:#fff;
+  border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+  font-size:1rem; display:none; z-index:9999; max-width:90%; text-align:center;
+}
 
 @media (max-width:768px){
-  .header-text .line1 { font-size:1.6rem; }
-  .header-text .line2 { font-size:1rem; }
   .qr-container { width:50%; max-width:250px; }
   .social-icons a img { width:30px; height:30px; }
   .user-info input { width:100%; }
   .buttons { flex-direction:column; gap:10px; }
+}
+
+/* ★ ONLY THE NEW TEXT UNDER THE IMAGE — NOTHING ELSE CHANGED */
+#promoText {
+  width: 100%;
+  text-align: center;
+  margin-top: 12px;
+  position: relative;
+  z-index: 9999;
+}
+
+#promoText .p-line1 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #001a66, #003399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#promoText .p-line2 {
+  font-size: 1.1rem;
+  margin-top: 6px;
+  background: linear-gradient(to right, #cc0000, #ff1a1a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 </style>
 </head>
@@ -86,14 +120,13 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
 
 <div class="notification" id="notificationBox"></div>
 
-<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg">
+<!-- ★ IMAGE ONLY -->
+<div class="top-half" id="topHalf" data-src="assets/icon17%20(1).jpg"></div>
 
-  <!-- TEXT NOW ON TOP OF IMAGE (ANDROID COMPATIBLE) -->
-  <div class="header-text">
-    <div class="line1">Nursing Prometric Actual Simulation Test</div>
-    <div class="line2">500 test items based on the SMLE & Enclex Test Materials</div>
-  </div>
-
+<!-- ★ TEXT MOVED UNDER THE IMAGE (SAFE) -->
+<div id="promoText">
+  <div class="p-line1">Nursing Prometric Actual Simulation Test</div>
+  <div class="p-line2">500 test items based on the SMLE & Enclex Test Materials</div>
 </div>
 
 <div class="bottom-half">
@@ -107,11 +140,11 @@ input.unlock-code { padding:5px; width:150px; margin-right:10px; border-radius:5
   </div>
 
   <div class="social-icons">
-    <a href="tel:+6285399652487" title="Call"><img src="https://cdn-icons-png.flaticon.com/512/597/597177.png" alt="Call"></a>
-    <a href="https://wa.me/6285399652487" target="_blank" title="WhatsApp"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
-    <a href="mailto:gyoutrain@gmail.com" target="_blank" title="Email"><img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Email"></a>
-    <a href="https://web.facebook.com/gyouskill/?_rdc=1&_rdr#" target="_blank" title="Facebook"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook"></a>
-    <a href="https://www.instagram.com/etkyogya?igsh=cHEwZ3lycXhqNHc1" target="_blank" title="Instagram"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram"></a>
+    <a href="tel:+6285399652487"><img src="https://cdn-icons-png.flaticon.com/512/597/597177.png"></a>
+    <a href="https://wa.me/6285399652487" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
+    <a href="mailto:gyoutrain@gmail.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/732/732200.png"></a>
+    <a href="https://web.facebook.com/gyouskill/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></a>
+    <a href="https://www.instagram.com/etkyogya" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png"></a>
   </div>
 
   <div class="buttons">
@@ -127,6 +160,7 @@ function lazyLoadImage(img){
   const src = img.getAttribute('data-src');
   if(src){ img.src = src; img.style.opacity=1; img.removeAttribute('data-src'); }
 }
+
 window.addEventListener('load',()=>{
   const top=document.getElementById('topHalf');
   const qr=document.getElementById('danaQR');
@@ -134,7 +168,6 @@ window.addEventListener('load',()=>{
   lazyLoadImage(qr);
 });
 
-// Notification helper
 function showNotification(msg, color="#007bff", duration=3500){
   const box=document.getElementById("notificationBox");
   box.style.backgroundColor=color;
@@ -143,7 +176,6 @@ function showNotification(msg, color="#007bff", duration=3500){
   setTimeout(()=>{ box.style.display="none"; }, duration);
 }
 
-// Admin-controlled unlock
 let unlockCode="";
 let paymentApproved=false;
 let intervalId=null;
@@ -156,7 +188,7 @@ function confirmPayment(){
   const adminMsg=`Payment Pending:
 Name: ${name}
 WA #: ${wa}
-Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to continue Next Test`;
+Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code`;
 
   window.open(`https://wa.me/6285399652487?text=${encodeURIComponent(adminMsg)}`, "_blank");
 
@@ -165,7 +197,9 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
   showNotification("Payment pending. Wait for admin confirmation.", "#ffc107");
 
   const GAS_URL="https://script.google.com/macros/s/AKfycbzIfzn164axPDK4hIXZxZCccCVxmfaO5hxOMyVExE0YfDyXY9TCrYRc067gDDhorQJhqQ/exec";
+
   if(intervalId) clearInterval(intervalId);
+
   intervalId=setInterval(()=>{
     fetch(GAS_URL,{
       method:"POST",
@@ -178,7 +212,7 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
         document.getElementById("unlockCodeInput").disabled=false;
         document.getElementById("continue-btn").disabled=false;
         clearInterval(intervalId);
-        showNotification("Payment confirmed. Enter the unlock code from admin.", "#28a745");
+        showNotification("Payment confirmed. Enter the unlock code.", "#28a745");
       }
     }).catch(err=>console.log(err));
   },3000);
@@ -187,14 +221,15 @@ Check QR Dana - Just IDR 50k - Share Proof - You will get the Unlock Code to con
 function checkUnlockCode(){
   const codeInput=document.getElementById("unlockCodeInput").value.trim().toUpperCase();
   if(!codeInput){ showNotification("Enter unlock code.", "#cc0000"); return; }
-  if(!paymentApproved){ showNotification("Unlock code not approved yet.", "#cc0000"); return; }
+  if(!paymentApproved){ showNotification("Wait for admin approval.", "#cc0000"); return; }
   if(codeInput===unlockCode){
     showNotification("Unlock code valid! Redirecting...", "#28a745");
     setTimeout(()=>{ window.location.href="https://gyoutrain-lab.github.io/nursing-prometric-test-allinone500/"; }, 1000);
   }else{
-    showNotification("Invalid unlock code. Contact admin.", "#cc0000");
+    showNotification("Invalid unlock code.", "#cc0000");
   }
 }
 </script>
+
 </body>
 </html>
